@@ -1,0 +1,25 @@
+﻿<ion-view view-title="Accelerometer">
+    <ion-content padding="true" scroll="false">
+        <p>Acceleration.X: {{acceleration.x}}</p>
+        <p>Acceleration.Y: {{acceleration.y}}</p>
+        <p>Acceleration.Z: {{acceleration.z}}</p>
+        <p>Acceleration.Z > 2: {{acceleration.z > 2}}</p>
+        <p>Acceleration.Z < -2: {{acceleration.z < -2}}</p>
+        <p>direction: {{acceleration.direction}}</p>
+        <p>status: {{doubleRobotics.message}}</p>
+        <p>serial: {{doubleRobotics.serial}}</p>
+        <p>battery: {{doubleRobotics.batteryPercent}}</p>
+        <p ng-show="acceleration.direction == 'forward'" style="font-size: 50px;"><i class="ion-arrow-up-a balanced"></i></p>
+        <p ng-show="acceleration.direction == 'stop'" style="font-size: 50px;"><i class="ion-stop assertive"></i></p>
+        <p ng-show="acceleration.direction == 'back'" style="font-size: 50px;"><i class="ion-arrow-down-a balanced"></i></p>
+
+        <button class="button button-outline icon-left ion-chevron-up" ng-click="retractKickstands()">Retract kickstands</button>
+        <button class="button button-outline icon-left ion-chevron-down" ng-click="deployKickstands()">Deploy kickstands</button>
+
+        <button class="button icon ion-chevron-up" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="driveBackward()"></button>
+        <button class="button icon ion-stop" style="display: block; padding: 40px 61px; margin: 10px;"></button>
+        <button class="button icon ion-chevron-down" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="driveForward()"></button>
+
+        <button class="button icon ion-refresh" style="display: block; padding: 40px 60px; margin: 10px; margin-top: 50px;" ng-click="turnByDegrees(180)"></button>
+</ion-content>
+</ion-view>

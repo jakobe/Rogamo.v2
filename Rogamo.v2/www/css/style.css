@@ -1,0 +1,82 @@
+/* Empty. Add your own CSS if you like */
+button.icon.rotate-45:before {
+    transform: rotate(45deg)
+}
+button.icon.rotate-90:before {
+    transform: rotate(90deg)
+}
+button.icon.rotate-135:before {
+    transform: rotate(135deg)
+}
+button.icon.rotate-180:before {
+    transform: rotate(180deg)
+}
+button.icon.rotate-225:before {
+    transform: rotate(225deg)
+}
+button.icon.rotate-270:before {
+    transform: rotate(270deg)
+}
+button.icon.flip-x:before {
+    transform: scaleX(-1);
+}
+
+.kickstand-pole-controls {
+     float: right;
+     margin-top: 10px;
+}
+
+.drive-controls {
+     width: 420px;
+}
+.drive-controls .col {
+     text-align: center;
+}
+
+.drive-controls button {
+     width: 125px;
+     height: 125px;
+}
+
+.button-huge {
+    padding: 0 16px;
+    min-width: 125px;
+    min-height: 125px;
+    font-size: 30px;
+    line-height: 53px;
+}
+
+.button-huge .icon:before,
+.button-huge.icon:before,
+.button-huge.icon-left:before,
+.button-huge.icon-right:before {
+        padding-bottom: 2px;
+        font-size: 42px;
+        line-height: 51px;
+}
+
+.infobar {
+    border-top: 1px solid #ddd;
+}
+
+.infobar .title {
+    font-size: smaller;
+    color: #ddd;
+}
+
+.fade.ng-hide {
+  opacity: 0;
+}
+
+.fade.ng-hide-remove,
+.fade.ng-hide-add {
+  display: block !important;
+}
+
+.fade.ng-hide-remove {
+  transition: all linear 1000ms;
+}
+
+.fade.ng-hide-add {
+  transition: all linear 250ms;
+}

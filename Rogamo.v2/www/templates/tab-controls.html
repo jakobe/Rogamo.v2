@@ -1,0 +1,76 @@
+﻿<ion-view view-title="Controls">
+    <ion-content padding="true" scroll="false">
+        <div class="kickstand-pole-controls">
+            <button class="button button-outline icon-left ion-chevron-up" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="kickstands(kickstandsCommands.up)">Retract kickstands</button>
+            <button class="button button-outline icon-left ion-chevron-down" style="display: block; margin-bottom: 50px; width: 190px;" ng-click="kickstands(kickstandsCommands.down)">Deploy kickstands</button>
+            <button class="button button-outline icon-left ion-arrow-up-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.up)">Pole up</button>
+            <button class="button button-outline icon-left ion-stop" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.stop)">Pole stop</button>
+            <button class="button button-outline icon-left ion-arrow-down-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.down)">Pole down</button>
+        </div>
+        <div class="drive-controls">
+            <div class="row">
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-left rotate-45" ng-click="drive(-model.speed, -0.5)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-up" ng-click="drive(-model.speed)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-up rotate-45" ng-click="drive(-model.speed, 0.5)"></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-left" ng-click="drive(0, 1)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-stop"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-right" ng-click="drive(0, -1)"></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-down rotate-45" ng-click="drive(model.speed, 0.5)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-down" ng-click="drive(model.speed)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-chevron-right rotate-45" ng-click="drive(model.speed, -0.5)"></button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 50px;">
+                <div class="col">
+                    <button class="button icon button-huge ion-refresh" ng-click="turnByDegrees(-178)"></button>
+                </div>
+                <div class="col">
+                    <button class="button icon button-huge ion-refresh flip-x" ng-click="turnByDegrees(178)"></button>
+                </div>
+                <div class="col col-bottom">
+                    <input type="number" class="balanced" ng-model="model.degrees" placeholder="indtast grader, fx 45" style="text-align: center;" />
+                    <button class="button icon ion-refresh flip-x" style="height: 90px;" ng-click="turnByDegrees(model.degrees)" ng-disabled="(!model.degrees)"> <i class="icon ion-refresh"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-center col-80">
+                    <div class="range">
+                        <i class="icon ion-ios-speedometer-outline balanced"></i>
+                        <input type="range" name="speed" ng-model="model.speed" min="0" max="1" step="0.1">
+                        <i class="icon ion-ios-speedometer assertive"></i>
+                    </div>
+                </div>
+                <div class="col col-center">
+                    <span ng-bind="'Fart: ' + (model.speed * 100)"></span>
+                </div>
+            </div>
+        </div>
+        <div class="bar bar-footer infobar">
+            <div class="title">
+                <!--<span ng-bind="'DR serial: {0} | speed: {1} | message: {2}' | format: doubleRobotics.serial:model.speed:doubleRobotics.message"></span>-->
+                DR serial: {{doubleRobotics.serial}} | speed: {{model.speed}} | message: {{doubleRobotics.message}}
+            </div>
+        </div>
+</ion-content>
+</ion-view>
