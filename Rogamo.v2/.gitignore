@@ -6,6 +6,9 @@ node_modules/
 platforms/
 plugins/
 
+# Used by the VS project system to mirror the file system changes
+changeList.json
+
 # User-specific files
 .vs/
 *.suo
