@@ -21,6 +21,10 @@
     {
       "locator": "https://github.com/jakobe/cordova-plugin-doublerobotics.git",
       "id": "cordova-plugin-doublerobotics"
+    },
+    {
+      "locator": "https://github.com/SidneyS/cordova-plugin-nativeaudio.git",
+      "id": "cordova-plugin-nativeaudio"
     }
   ],
   "cordovaPlatforms": [
