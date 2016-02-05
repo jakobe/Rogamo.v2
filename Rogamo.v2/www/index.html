@@ -6,15 +6,15 @@
     <meta name="format-detection" content="telephone=no" />
     <title></title>
 
-    <link href="http://code.ionicframework.com/1.0.0-rc.5/css/ionic.css" rel="stylesheet">
+    <link href="lib/ionic/1.0.0-rc.5/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
     <!-- ionic/angularjs js -->
-    <script src="http://code.ionicframework.com/1.0.0-rc.5/js/ionic.bundle.min.js"></script>
-    <script src="http://code.ionicframework.com/1.0.0-rc.5/js/angular/angular-animate.min.js"></script>
+    <script src="lib/ionic/1.0.0-rc.5/js/ionic.bundle.min.js"></script>
+    <script src="lib/ionic/1.0.0-rc.5/js/angular/angular-animate.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -23,16 +23,22 @@
     <script src="app/app.js"></script>
     <script src="app/app.config.js"></script>
     <script src="app/app.core.js"></script>
+
     <!-- filter js -->
-    <script src="lib/Angular.Filter.Format.js"></script>
+    <script src="lib/ionic/1.0.0-rc.5/js/angular/Angular.Filter.Format.js"></script>
 
     <!-- services -->
     <script src="app/services/canvas-renderer.service.js"></script>
+    <script src="app/services/robot.provider.js"></script>
+    <script src="app/services/fake.robot.js"></script>
 
+    <!-- controllers -->
     <script src="app/dashboard/dashboard.controller.js"></script>
     <script src="app/accelerometer/accelerometer.controller.js"></script>
     <script src="app/robot-controls/robot-controls.controller.js"></script>
 
+    <!-- games -->
+    <script src="app/services/games/egg-throw.game.js"></script>
 </head>
 <body ng-app="app">
     <!--

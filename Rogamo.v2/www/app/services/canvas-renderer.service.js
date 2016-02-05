@@ -13,20 +13,49 @@
 
     function CanvasRendererService() {
 
+        var expressions = {
+            happy: {
+                mouth: {
+                    startingPoint: Math.PI / 2,
+                    startAngle: Math.PI / 2,
+                    endAngle: Math.PI / 2
+                },
+                eyebrows: {
+                    startAngle: -45,
+                    endAngle: 45
+                }
+            }
+        };
+
+        var defaults = {
+            color: '#fff',
+            animate: true,
+            frames: 40,
+            expression: expressions.happy
+        };
+
+
         var service = {
-            drawSmiley: drawSmiley
+            drawSmiley: drawSmiley,
+            clearCanvas: clearCanvas
         };
         return service;
 
         /////////////////////////
 
+        function drawSmiley(canvas, options) {
+            var settings = angular.extend({}, defaults, options),
+                frames = settings.animate ? settings.frames : 1;
+            animateSmiley(canvas, settings.expression, settings.color, frames);
+        }
 
-
-        function drawSmiley(canvas, color, frames, currentFrame) {
+        function animateSmiley(canvas, expression, color, frames, currentFrame) {
             color = color || 'black';
             frames = frames || 40;
             currentFrame = currentFrame || 0;
             currentFrame++;
+            var mouth = expression.mouth;
+            var eyebrows = expression.eyebrows;
             var animationProgress = (currentFrame / frames);
             var context = canvas.getContext('2d');
             var centerX = canvas.width / 2;
@@ -64,8 +93,8 @@
             var eyeX = centerX - eyeXOffset,
                 eyeY = centerY - eyeYOffset,
                 eyeRadius = eyeBrowsRadius,
-                eyeStartAngle = Math.PI * 1.25,
-                eyeEndAngle = Math.PI * 1.75,
+                eyeStartAngle = degreesToRadians(eyebrows.startAngle-90),
+                eyeEndAngle = degreesToRadians(eyebrows.endAngle-90),
                 counterClockwise = false;
             context.arc(eyeX, eyeY, eyeRadius, eyeStartAngle, eyeEndAngle, counterClockwise);
             context.lineWidth = 20;
@@ -84,8 +113,8 @@
             var mouthX = centerX,
                 mouthY = centerY,
                 mouthRadius = mouthRadius,
-                mouthStartAngle = halfPI - (animationProgress * (halfPI)),
-                mouthEndAngle = halfPI + (animationProgress * (halfPI)),
+                mouthStartAngle = mouth.startingPoint - (animationProgress * (mouth.startAngle)),
+                mouthEndAngle = mouth.startingPoint + (animationProgress * (mouth.endAngle)),
                 counterClockwise = false;
             context.arc(mouthX, mouthY, mouthRadius, mouthStartAngle, mouthEndAngle, counterClockwise);
             context.lineWidth = 20;
@@ -101,13 +130,20 @@
             if (currentFrame < frames) {
                 window.requestAnimFrame(function () {
                     context.clearRect(0, 0, canvas.width, canvas.height);
-                    drawSmiley(canvas, color, frames, currentFrame);
+                    animateSmiley(canvas, expression, color, frames, currentFrame);
                 });
             }
         };
 
+        function degreesToRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
 
-        var clearCanvas = function (canvas) {
+        function radiansToDegrees(radians) {
+            return radians * (180 / Math.PI);
+        }
+
+        function clearCanvas(canvas) {
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
         };
