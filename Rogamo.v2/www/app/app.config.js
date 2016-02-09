@@ -36,7 +36,12 @@
              views: {
                  'tab-acc': {
                      templateUrl: 'app/accelerometer/accelerometer.html',
-                     controller: 'AccelerometerController'
+                     controller: 'AccelerometerController',
+                     resolve: {
+                         robot: function (RobotProvider) {
+                             return RobotProvider.getRobot();
+                         }
+                     }
                  }
              }
          })
@@ -46,7 +51,12 @@
             views: {
                 'tab-controls': {
                     templateUrl: 'app/robot-controls/robot-controls.html',
-                    controller: 'RobotControlsController'
+                    controller: 'RobotControlsController',
+                    resolve: {
+                        robot: function (RobotProvider) {
+                            return RobotProvider.getRobot();
+                        }
+                    }
                 }
             }
         });

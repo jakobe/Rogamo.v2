@@ -6,8 +6,9 @@
 
     EggThrowGame.$inject = ['RobotProvider', '$ionicPlatform'];
 
-    function EggThrowGame(robot, $ionicPlatform) {
-        var model = null,
+    function EggThrowGame(robotProvider, $ionicPlatform) {
+        var robot = null,
+            model = null,
             onSuccess,
             onFailure,
             onGameOver,
@@ -21,6 +22,10 @@
             accelerometerWatchID,
             audioPlugin,
             sounds = {};
+
+        robotProvider.getRobot().then(function (robotInstance) {
+            robot = robotInstance;
+        });
 
         function playSound(soundId) {
             var sound = sounds[soundId];
@@ -52,9 +57,6 @@
                 } else {
                     sounds[sound.id] = new Audio(sound.path);
                 }
-            }
-            if (window.device && window.device.platform === 'iOS' && window.cordova && window.cordova.plugins.doubleRobotics) {
-                robot = window.cordova.plugins.doubleRobotics;
             }
         });
 
