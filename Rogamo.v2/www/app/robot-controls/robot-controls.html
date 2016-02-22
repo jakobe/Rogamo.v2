@@ -1,57 +1,59 @@
 ﻿<ion-view view-title="Controls">
     <ion-content padding="true" scroll="false">
+        <canvas id="line" class="chart chart-line" style="border: 1px solid #ccc;" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-options="{showTooltips: false, animation: false, scaleOverride: true, scaleSteps: 20, scaleStartValue: -1, scaleStepWidth: 0.1}"></canvas>
         <div class="kickstand-pole-controls">
-            <button class="button button-outline icon-left ion-chevron-up" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="kickstands(kickstandsCommands.up)">Retract kickstands</button>
-            <button class="button button-outline icon-left ion-chevron-down" style="display: block; margin-bottom: 50px; width: 190px;" ng-click="kickstands(kickstandsCommands.down)">Deploy kickstands</button>
-            <button class="button button-outline icon-left ion-arrow-up-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.up)">Pole up</button>
-            <button class="button button-outline icon-left ion-stop" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.stop)">Pole stop</button>
-            <button class="button button-outline icon-left ion-arrow-down-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="pole(poleCommands.down)">Pole down</button>
+            <button class="button button-outline icon-left ion-chevron-up" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="retractKickstands()">Retract kickstands</button>
+            <button class="button button-outline icon-left ion-chevron-down" style="display: block; margin-bottom: 50px; width: 190px;" ng-click="deployKickstands()">Deploy kickstands</button>
+            <button class="button button-outline icon-left ion-arrow-up-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleUp()">Pole up</button>
+            <button class="button button-outline icon-left ion-stop" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleStop()">Pole stop</button>
+            <button class="button button-outline icon-left ion-arrow-down-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleDown()">Pole down</button>
+            <textarea readonly cols="40" rows="6" style="border: 1px solid #ccc; font-size: smaller">{{driveData}}</textarea>
         </div>
         <div class="drive-controls">
             <div class="row">
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-left rotate-45" ng-click="drive(-model.speed, -0.5)"></button>
+                    <button class="button icon button-huge ion-chevron-left rotate-45" on-touch="drive(-model.speed, -0.5)" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-up" ng-click="drive(-model.speed)"></button>
+                    <button class="button icon button-huge ion-chevron-up" on-touch="drive(-model.speed)" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-up rotate-45" ng-click="drive(-model.speed, 0.5)"></button>
+                    <button class="button icon button-huge ion-chevron-up rotate-45" on-touch="drive(-model.speed, 0.5)" on-release="stop()"></button>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-left" ng-click="drive(0, 1)"></button>
+                    <button class="button icon button-huge ion-chevron-left" on-touch="drive(0, 1)" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-stop"></button>
+                    <button class="button icon button-huge ion-stop" on-touch="stop()" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-right" ng-click="drive(0, -1)"></button>
+                    <button class="button icon button-huge ion-chevron-right" on-touch="drive(0, -1)" on-release="stop()"></button>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-down rotate-45" ng-click="drive(model.speed, 0.5)"></button>
+                    <button class="button icon button-huge ion-chevron-down rotate-45" on-touch="drive(model.speed, 0.5)" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-down" ng-click="drive(model.speed)"></button>
+                    <button class="button icon button-huge ion-chevron-down" on-touch="drive(model.speed)" on-release="stop()"></button>
                 </div>
                 <div class="col">
-                    <button class="button icon button-huge ion-chevron-right rotate-45" ng-click="drive(model.speed, -0.5)"></button>
+                    <button class="button icon button-huge ion-chevron-right rotate-45" on-touch="drive(model.speed, -0.5)" on-release="stop()"></button>
                 </div>
             </div>
-            <div class="row" style="margin-top: 50px;">
+            <div class="row" style="margin-top: 20px;">
                 <div class="col">
                     <button class="button icon button-huge ion-refresh" ng-click="turnByDegrees(-178)"></button>
                 </div>
                 <div class="col">
                     <button class="button icon button-huge ion-refresh flip-x" ng-click="turnByDegrees(178)"></button>
                 </div>
-                <div class="col col-bottom">
+                <!--<div class="col col-bottom">
                     <input type="number" class="balanced" ng-model="model.degrees" placeholder="indtast grader, fx 45" style="text-align: center;" />
                     <button class="button icon ion-refresh flip-x" style="height: 90px;" ng-click="turnByDegrees(model.degrees)" ng-disabled="(!model.degrees)"> <i class="icon ion-refresh"></i></button>
-                </div>
+                </div>-->
             </div>
             <div class="row">
                 <div class="col col-center col-80">
@@ -63,6 +65,17 @@
                 </div>
                 <div class="col col-center">
                     <span ng-bind="'Fart: ' + (model.speed * 100)"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button" ng-click="drive(model.speed, 0.0, 100)">1m</button>
+                </div>
+                <div class="col">
+                    <button class="button" ng-click="drive(model.speed, 0.0, 200)">2m</button>
+                </div>
+                <div class="col">
+                    <button class="button" ng-click="drive(model.speed, 0.0, 300)">3m</button>
                 </div>
             </div>
         </div>

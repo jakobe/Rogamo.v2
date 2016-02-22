@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    angular.module('app', ['ionic', 'ngAnimate', 'app.core'])
+    angular.module('app', ['ionic', 'chart.js', 'ngAnimate', 'app.core'])
 
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $window) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
