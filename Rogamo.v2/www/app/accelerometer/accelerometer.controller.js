@@ -17,17 +17,12 @@
         //    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         //}
 
-        $scope.retractKickstands = function () {
-            robot.kickstand(robot.kickstandsCommands.up);
-        }
-
-        $scope.deployKickstands = function () {
-            robot.kickstand(robot.kickstandsCommands.down);
-        }
+        $scope.retractKickstands = robot.retractKickstands;
+        $scope.deployKickstands = robot.deployKickstands;
 
         $scope.turnByDegrees = function (degrees) {
-            robot.drive("turnByDegrees", function (msg) { alert("Succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
-        }
+            robot.turnByDegrees(180, function (msg) { alert("Succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
+        };
 
 
         $scope.driveForward = function () {
