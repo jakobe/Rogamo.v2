@@ -31,6 +31,25 @@
             }
         })
 
+        .state('tab.egg', {
+            url: '/eggthrow',
+            views: {
+            'tab-dash': {
+                    templateUrl: 'app/games/egg-throw.html',
+                    controller: 'EggThrowGameController'
+                    }
+                }
+            })
+        .state('tab.swing', {
+            url: '/swing',
+            views: {
+                'tab-dash': {
+                    templateUrl: 'app/games/swing.html',
+                    controller: 'SwingGameController'
+                }
+            }
+        })
+
          .state('tab.acc', {
              url: '/acc',
              views: {
@@ -62,7 +81,7 @@
         });
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/tab/dash');
+        $urlRouterProvider.otherwise('/tab/controls');
 
     };
 

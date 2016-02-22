@@ -1,0 +1,105 @@
+﻿<ion-view view-title="Gyngespil">
+    <ion-content padding="true" scroll="false">
+        <div class="list card">
+            <div class="item item-divider">Fart: {{(model.speed * model.lowSpeedFactor * 100).toFixed(1)}} / {{(model.speed * model.mediumSpeedFactor * 100).toFixed(1)}} / {{model.speed * 100}}</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        <i class="icon ion-ios-speedometer-outline balanced"></i>
+                        <input type="range" name="speed" ng-model="model.speed" min="0" max="1" step="0.1">
+                        <i class="icon ion-ios-speedometer assertive"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Blødt skub: {{model.lowSpeedFactor}} | Mellem skub: {{model.mediumSpeedFactor}}</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        <i class="icon ion-android-hand balanced"></i>
+                        <input type="range" name="lowSpeedFactor" ng-model="model.lowSpeedFactor" min="0.1" max="0.8" step="0.05">
+                        <input type="range" name="mediumSpeedFactor" ng-model="model.mediumSpeedFactor" min="0.5" max="0.9" step="0.05">
+                        <i class="icon ion-android-hand energized"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="list card">
+            <div class="item item-divider">Vinkel: {{model.degrees}}</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        <i class="icon ion-ios-timer-outline balanced"></i>
+                        <input type="range" name="turnDegrees" ng-model="model.degrees" min="0" max="90" step="15">
+                        <i class="icon ion-ios-timer assertive"></i>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <!--<div class="list card">
+            <div class="item item-divider">Spilleområde: {{model.range - model.rangeLowDelta}}m / {{model.range - model.rangeMediumDelta}}m / {{model.range}}m</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        2m
+                        <input type="range" name="range" ng-model="model.range" min="2" max="4" step="0.5">
+                        4m
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <div class="list card">
+            <div class="item item-divider">Tid - gynge: {{model.swingduration}} sekunder</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        2s
+                        <input type="range" name="swingduration" ng-model="model.swingduration" min="2" max="6" step="0.5">
+                        6s
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Pause - gynge tilbage: {{model.swingbackpause}} sekunder</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        0s
+                        <input type="range" name="swingbackpause" ng-model="model.swingbackpause" min="0" max="2" step="0.2">
+                        2s
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Antal spillere: {{model.numberOfPlayers}}</div>
+            <div class="item item-body">
+                <div>
+                    <div class="range">
+                        1
+                        <input type="range" name="numberOfPlayers" ng-model="model.numberOfPlayers" min="1" max="4" step="1">
+                        4
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center"><button class="button button-huge icon ion-play" ng-click="startGame(games.swing)"></button></div>
+        <div class="bar bar-footer infobar">
+            <div class="title">
+                <!--<span ng-bind="'DR serial: {0} | speed: {1} | message: {2}' | format: doubleRobotics.serial:model.speed:doubleRobotics.message"></span>-->
+                <i ng-class="{'icon ion-stop': model.robotDriving === false, 'icon ion-play': model.robotDriving === true}"></i>
+                Skub: {{force}} | speed: {{model.currentSpeed}} | left: {{model.robotData.leftEncoderDeltaCm}}cm | right: {{model.robotData.rightEncoderDeltaCm}}cm
+            </div>
+        </div>
+        <div id="gameContainer" ng-show="model.gameStarted === true" class="ng-hide fade" style="position: absolute; left: 0; top: 0; right: 0; bottom: 44px; background-color: rgb(255, 255, 255); z-index: 99; text-align: center">
+            <canvas id="canvas" style="position: absolute; left: 190px; top: 200px; border: 0px solid blue;" width="400" height="400"></canvas>
+            <a class="button button-block push-hard button-assertive" style="height: 280px; margin: 0 20px;" on-touch="push('hard')"></a>
+            <a class="button button-block push-medium button-energized" style="height: 280px; margin: 0 20px;" on-touch="push('medium')"></a>
+            <a class="button button-block push-soft button-calm" style="height: 280px; margin: 0 20px;" on-touch="push('soft')"></a>
+            <img src="img/pige_paa_gynge_fritlagt.png" style="width: 600px; position: absolute; top: -160px; left: 100px; pointer-events: none;" ng-hide="model.gameLost === true" />
+            <div style="text-align: right; position: absolute; bottom: 20px; width: 100%; padding-right: 20px;"><button class="button button-huge icon ion-stop" on-touch="stopGame()"></button></div>
+        </div>
+    </ion-content>
+</ion-view>

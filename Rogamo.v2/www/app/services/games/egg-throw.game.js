@@ -84,7 +84,7 @@
                     accelerometerWatchID = navigator.accelerometer.watchAcceleration(onWatchAccelerationSuccess, onWatchAccelerationError, watchOptions);
                 }
             });
-            robot.kickstand(robot.kickstandsCommands.up);
+            robot.retractKickstands();
             setTimeout(function () {
                 model.gameStarted = true;
                 robotStartDrive(parseFloat(model.speed), parseFloat(model.range) * 100);
@@ -95,7 +95,7 @@
             robotStopDrive();
             model.gameStarted = false;
             stopAccelerometer();
-            //setTimeout(function () { robot.kickstand(robot.kickstandsCommands.down); }, 500);
+            //setTimeout(function () { robot.deployKickstands(); }, 500);
         };
 
         function stopAccelerometer() {
