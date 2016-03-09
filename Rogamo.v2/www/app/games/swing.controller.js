@@ -69,9 +69,12 @@
             }
         }
 
-        function onRobotDriveSucces(data) {
+        function onRobotDriveSucces(traveldata) {
+            if (traveldata instanceof CustomEvent) {
+                traveldata = traveldata.detail;
+            }
             $scope.$apply(function () {
-                $scope.model.robotData = angular.extend($scope.model.robotData, data);
+                $scope.model.robotData = angular.extend($scope.model.robotData, traveldata);
             });
         }
 
