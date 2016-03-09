@@ -4,7 +4,7 @@
     angular.module('app')
     .controller('RobotControlsController', RobotControlsController);
 
-    function RobotControlsController($scope, robot, $ionicPlatform) {
+    function RobotControlsController($scope, robot, $ionicPlatform, $http) {
 
         $scope.labels = ["0", "200"];
         $scope.series = ['Drive'];
@@ -67,12 +67,12 @@
             }
             if (traveldata.leftEncoderDeltaCm >= next50Cm) {
                 //robot.stop();
-                playSound('beep');
+                //playSound('beep');
                 next50Cm += 50;
                 //setTimeout(function () { alert('200!'); }, 0);
             }
             if (currentRange && traveldata.leftEncoderDeltaCm >= currentRange) {
-                //robot.stop();
+                robot.stop();
                 //playSound('success');
                 currentRange = null;
                 //setTimeout(function () { alert('200!'); }, 0);
@@ -102,6 +102,13 @@
                     driveDataToDisplay += 'speed: ' + entry.speed + ' | range: ' + entry.range + ' | ' + entry.time + '\n';
                 }
             }
+            var lastDrive = traveldata.lastDrive,
+                            dataToUpload;
+            if (lastDrive) {
+                dataToUpload = [lastDrive.time, lastDrive.speed, lastDrive.start];
+                console.log(dataToUpload);
+                uploadData(dataToUpload);
+            }
 
             // Handle the online event
             $scope.$apply(function () {
@@ -112,6 +119,16 @@
                 $scope.driveData = driveDataToDisplay;
                 $scope.labels = labels;
                 $scope.data = [data];
+            });
+        }
+
+        function uploadData(data) {
+            var url = 'http://10.0.0.132:1004/upload';
+            $http.post(url, data).then(function successCallback(response) {
+                console.log(response);
+            },
+            function errorCallback(response) {
+                console.log(response);
             });
         }
 

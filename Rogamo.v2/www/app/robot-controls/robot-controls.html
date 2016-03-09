@@ -1,13 +1,11 @@
 ﻿<ion-view view-title="Controls">
     <ion-content padding="true" scroll="false">
-        <canvas id="line" class="chart chart-line" style="border: 1px solid #ccc;" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-options="{showTooltips: false, animation: false, scaleOverride: true, scaleSteps: 20, scaleStartValue: -1, scaleStepWidth: 0.1}"></canvas>
         <div class="kickstand-pole-controls">
             <button class="button button-outline icon-left ion-chevron-up" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="retractKickstands()">Retract kickstands</button>
             <button class="button button-outline icon-left ion-chevron-down" style="display: block; margin-bottom: 50px; width: 190px;" ng-click="deployKickstands()">Deploy kickstands</button>
             <button class="button button-outline icon-left ion-arrow-up-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleUp()">Pole up</button>
             <button class="button button-outline icon-left ion-stop" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleStop()">Pole stop</button>
             <button class="button button-outline icon-left ion-arrow-down-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleDown()">Pole down</button>
-            <textarea readonly cols="40" rows="6" style="border: 1px solid #ccc; font-size: smaller">{{driveData}}</textarea>
         </div>
         <div class="drive-controls">
             <div class="row">
@@ -50,10 +48,10 @@
                 <div class="col">
                     <button class="button icon button-huge ion-refresh flip-x" ng-click="turnByDegrees(178)"></button>
                 </div>
-                <!--<div class="col col-bottom">
+                <div class="col col-bottom">
                     <input type="number" class="balanced" ng-model="model.degrees" placeholder="indtast grader, fx 45" style="text-align: center;" />
                     <button class="button icon ion-refresh flip-x" style="height: 90px;" ng-click="turnByDegrees(model.degrees)" ng-disabled="(!model.degrees)"> <i class="icon ion-refresh"></i></button>
-                </div>-->
+                </div>
             </div>
             <div class="row">
                 <div class="col col-center col-80">
