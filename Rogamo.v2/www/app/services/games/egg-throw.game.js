@@ -79,8 +79,8 @@
             points = 0;
             $ionicPlatform.ready(function () {
                 //alert('watchAcceleration...');
+                var watchOptions = { frequency: 100 };
                 if (navigator.accelerometer) {
-                    var watchOptions = { frequency: 100 };
                     accelerometerWatchID = navigator.accelerometer.watchAcceleration(onWatchAccelerationSuccess, onWatchAccelerationError, watchOptions);
                 }
             });
@@ -101,6 +101,7 @@
         function stopAccelerometer() {
             if (navigator.accelerometer && accelerometerWatchID) {
                 navigator.accelerometer.clearWatch(accelerometerWatchID);
+                accelerometerWatchID = null;
             }
         }
 
