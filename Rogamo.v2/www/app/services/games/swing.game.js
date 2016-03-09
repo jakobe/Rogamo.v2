@@ -17,7 +17,7 @@
             points = 0,
             totalPointsToWin = 5,
             direction = 1,
-            robotDriveTimeoutId,
+            robotDriveTimeoutId = null,
             audioPlugin,
             sounds = {},
             backgroundSound = { id: 'background', path: 'audio/swing/268079__rbnx__birds-spring-mono-02.mp3' };
@@ -154,6 +154,12 @@
                 loopSound(backgroundSound.id);
             });
             robot.retractKickstands();
+            try {
+                window.addEventListener("traveldata", onTravelData, false);
+            }
+            catch (err) {
+                alert(err);
+            }
             setTimeout(function () {
                 model.gameStarted = true;
             }, 3000);
@@ -213,12 +219,6 @@
         var currentRangeInCm = 0;
         function robotStartDrive(speed, rangeInCm, onDriveEnd) {
             if (model.gameStarted) {
-                try {
-                    window.addEventListener("traveldata", onTravelData, false);
-                }
-                catch (err) {
-                    alert(err);
-                }
                 driveCounter = 0;
                 model.robotDriving = true;
                 var maxSpeed = speed;
@@ -241,8 +241,8 @@
             }
         }
 
-        function calculateCurrentSpeed(maxSpeed, elapsedTimeInMs, totalTimeInMs) {
-            return maxSpeed * Math.sin((elapsedTimeInMs / totalTimeInMs) * Math.PI)
+        function calculateCurrentSpeed(maxSpeed, elapsed, total) {
+            return maxSpeed * Math.sin((elapsed / total) * Math.PI)
         }
 
         function setRobotSpeed(maxSpeed, turn, startTime, totalTimeInMs, intervalInMs) {
@@ -254,7 +254,7 @@
                 robot.variableDrive2(currentSpeed, turn);
                 robotDriveTimeoutId = setTimeout(function () { setRobotSpeed(maxSpeed, turn, startTime, totalTimeInMs, intervalInMs); }, intervalInMs);
             } else {
-                robot.stop();
+                robotStopDrive();
                 if (swingOut) {
                     swingOut = false;
                     onSwingOut(maxSpeed);
@@ -263,6 +263,9 @@
         }
 
         function onTravelData(traveldata) {
+            if (traveldata instanceof CustomEvent) {
+                traveldata = traveldata.detail;
+            }
             if (typeof onSuccess === "function") {
                 onSuccess(traveldata);
             }
@@ -329,6 +332,7 @@
         function robotStopDrive() {
             if (robotDriveTimeoutId) {
                 clearTimeout(robotDriveTimeoutId);
+                robotDriveTimeoutId = null;
             }
             robot.stop();
             robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
