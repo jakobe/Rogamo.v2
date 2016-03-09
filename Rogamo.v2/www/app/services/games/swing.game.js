@@ -224,7 +224,7 @@
                 var maxSpeed = speed;
                 var turn = 0.0;
 
-                //robot.variableDrive2(driveSpeed, turn);
+                //robot.drive(driveSpeed, turn);
                 var startTime = new Date();
                 var totalTimeInMs = parseFloat(model.swingduration) * 1000;
                 var intervalInMs = 200;
@@ -233,11 +233,11 @@
 
                 //var driveSpeed = speed;// * 0.25;
                 //currentRangeInCm = rangeInCm;
-                //robot.variableDrive2(driveSpeed, turn, rangeInCm);
+                //robot.drive(driveSpeed, turn, rangeInCm);
 
 
                 //robot.startTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
-                //robot.variableDrive('drive', driveSpeed, turn, function (data) { onRobotDriveSucces(data, speed, rangeInCm, onDriveEnd); }, function (msg) { alert("Error! => " + msg); });
+                //robot.drive(driveSpeed, turn, null, function (data) { onRobotDriveSucces(data, speed, rangeInCm, onDriveEnd); }, function (msg) { alert("Error! => " + msg); });
             }
         }
 
@@ -251,7 +251,7 @@
             if (elapsedTimeInMs < totalTimeInMs) {
                 console.log("elapsedTimeInMs: " + elapsedTimeInMs);
                 var currentSpeed = calculateCurrentSpeed(maxSpeed, elapsedTimeInMs, totalTimeInMs);
-                robot.variableDrive2(currentSpeed, turn);
+                robot.drive(currentSpeed, turn);
                 robotDriveTimeoutId = setTimeout(function () { setRobotSpeed(maxSpeed, turn, startTime, totalTimeInMs, intervalInMs); }, intervalInMs);
             } else {
                 robotStopDrive();
@@ -298,7 +298,7 @@
                     model.currentSpeed = driveSpeed = deAccelerate(speed, rangeInCm, Math.abs(data.leftEncoderDeltaCm));
                     //Set timeout prevents overhead calling plugin:
                     robotDriveTimeoutId = setTimeout(function () {
-                        robot.variableDrive('drive', driveSpeed, turn, function (data) { onRobotDriveSucces(data, speed, rangeInCm, onDriveEnd); }, function (msg) { alert("Error! => " + msg); });
+                        robot.drive(driveSpeed, turn, null, function (data) { onRobotDriveSucces(data, speed, rangeInCm, onDriveEnd); }, function (msg) { alert("Error! => " + msg); });
                     }, 20);
                 }
             } else {

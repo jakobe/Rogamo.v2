@@ -47,7 +47,7 @@
                 if (counter >= 60) {
                     clearInterval(intervalId);
                 } else {
-                    robot.variableDrive('drive', driveSpeed, turn,
+                    robot.drive(driveSpeed, turn, null,
                         function (data) {
                             $scope.doubleRobotics = data;
                         },
@@ -63,7 +63,7 @@
                 if (counter >= 20) {
                     clearInterval(intervalId);
                 } else {
-                    robot.drive('drive', -0.5);
+                    robot.drive(-0.5);
                     counter++;
                 }
             }, 100);

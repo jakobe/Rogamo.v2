@@ -38,30 +38,19 @@
         this.stopTravelData = function (success, fail) {
             console.log("FakeRobot.stopTravelData");
         }
-        this.drive = function (command, success, fail) {
-            console.log("FakeRobot.drive: " + command);
-        }
-        this.variableDrive = function (command, driveDirection, turn, success, fail) {
-            console.log("FakeRobot.variableDrive | driveDirection:" + driveDirection);// + " (" + new Date().toISOString() + ")");
-            if (typeof success === "function") {
-                setTimeout(function () {
-                    success({ serial: "00-00FAKE", message: "Fake Robot..." });
-                }, 0);
-            }
-        }
         var driveIntervalId,
             leftEncoderDeltaCm,
             rightEncoderDeltaCm,
             driveData = [],
             driveStartDate;
-        this.variableDrive2 = function (driveDirection, turn, rangeInCm, success, fail) {
+        this.drive = function (driveDirection, turn, rangeInCm, success, fail) {
             if (typeof driveDirection === "string") driveDirection = parseFloat(driveDirection);
             //if (!driveStartDate) {
                 driveStartDate = new Date();
                 leftEncoderDeltaCm = 0.0;
                 rightEncoderDeltaCm = 0.0;
             //}
-            //console.log("FakeRobot.variableDrive | driveDirection:" + driveDirection);// + " (" + new Date().toISOString() + ")");
+            //console.log("FakeRobot.drive | driveDirection:" + driveDirection);// + " (" + new Date().toISOString() + ")");
             if (driveIntervalId) {
                 clearInterval(driveIntervalId);
             }
@@ -79,7 +68,7 @@
                     start: driveStartDate
                 };
                 driveData.push(newData)
-                console.log("FakeRobot.variableDrive | driveDirection:" + driveDirection + " | leftEncoderDeltaCm: " + leftEncoderDeltaCm + " | elapsedTimeInMs: " + elapsedTimeInMs);// + " (" + new Date().toISOString() + ")");
+                console.log("FakeRobot.drive | driveDirection:" + driveDirection + " | leftEncoderDeltaCm: " + leftEncoderDeltaCm + " | elapsedTimeInMs: " + elapsedTimeInMs);// + " (" + new Date().toISOString() + ")");
                 var cmPerInches = 2.54;
                 var travelData = {
                     leftEncoderDeltaInches: leftEncoderDeltaCm / cmPerInches,

@@ -205,7 +205,7 @@
                 var driveSpeed = speed;// * 0.25;
                 var turn = 0.0;
                 robot.startTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
-                robot.variableDrive('drive', driveSpeed, turn, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
+                robot.drive(driveSpeed, turn, null, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
             }
         };
 
@@ -232,7 +232,7 @@
                     }
                     //Set timeout prevents overhead calling plugin:
                     robotDriveTimeoutId = setTimeout(function () {
-                        robot.variableDrive('drive', driveSpeed, turn, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
+                        robot.drive(driveSpeed, turn, null, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
                     }, 50);
                 }
             } else {
@@ -244,7 +244,7 @@
             if (robotDriveTimeoutId) {
                 clearTimeout(robotDriveTimeoutId);
             }
-            robot.variableDrive('drive', 0, 0);
+            robot.stop();
             robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
             model.robotDriving = false;
         }

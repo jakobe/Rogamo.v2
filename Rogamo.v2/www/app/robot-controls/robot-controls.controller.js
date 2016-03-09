@@ -158,7 +158,7 @@
             next50Cm = 50;
             maxRange = 0;
             rangeWhenStopDriving = 0.0;
-            robot.variableDrive2(direction, turn, range,
+            robot.drive(direction, turn, range,
                 function (data) {
                     $scope.doubleRobotics = data;
                 },
