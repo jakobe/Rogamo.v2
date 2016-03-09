@@ -27,9 +27,9 @@
             robotDriving: false,
             speed: 0.5,
             degrees: 0,
-            range: 2,
+            range: 2.0,
             minAcceleration: 2.0,
-            maxAcceleration: 4,
+            maxAcceleration: 8.0,
             robotData: {
                 serial: "xx"
             }
