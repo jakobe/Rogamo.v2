@@ -31,6 +31,9 @@
 
         this.startTravelData = function (success, fail) {
             console.log("FakeRobot.startTravelData");
+            driveStartDate = new Date();
+            leftEncoderDeltaCm = 0.0;
+            rightEncoderDeltaCm = 0.0;
         }
         this.stopTravelData = function (success, fail) {
             console.log("FakeRobot.stopTravelData");
@@ -52,24 +55,30 @@
             driveData = [],
             driveStartDate;
         this.variableDrive2 = function (driveDirection, turn, rangeInCm, success, fail) {
-            if (!driveStartDate) {
+            if (typeof driveDirection === "string") driveDirection = parseFloat(driveDirection);
+            //if (!driveStartDate) {
                 driveStartDate = new Date();
                 leftEncoderDeltaCm = 0.0;
                 rightEncoderDeltaCm = 0.0;
-            }
+            //}
             //console.log("FakeRobot.variableDrive | driveDirection:" + driveDirection);// + " (" + new Date().toISOString() + ")");
             if (driveIntervalId) {
                 clearInterval(driveIntervalId);
             }
             driveIntervalId = setInterval(function () {
-                leftEncoderDeltaCm += 5.0;
-                rightEncoderDeltaCm = 5.0;
+                if (rangeInCm && rangeInCm - leftEncoderDeltaCm < 50) {
+                    driveDirection *= 0.95;
+                }
+                leftEncoderDeltaCm += (10.0 * driveDirection);
+                rightEncoderDeltaCm += (10.0 * driveDirection);
                 var elapsedTimeInMs = new Date() - driveStartDate;
-                driveData.push({
+                var newData = {
                     speed: driveDirection,
                     range: Math.abs(leftEncoderDeltaCm),
-                    time: msToTime(elapsedTimeInMs)
-                })
+                    time: new Date(),//msToTime(elapsedTimeInMs),
+                    start: driveStartDate
+                };
+                driveData.push(newData)
                 console.log("FakeRobot.variableDrive | driveDirection:" + driveDirection + " | leftEncoderDeltaCm: " + leftEncoderDeltaCm + " | elapsedTimeInMs: " + elapsedTimeInMs);// + " (" + new Date().toISOString() + ")");
                 var cmPerInches = 2.54;
                 var travelData = {
@@ -77,7 +86,8 @@
                     rightEncoderDeltaInches: rightEncoderDeltaCm / cmPerInches,
                     leftEncoderDeltaCm: leftEncoderDeltaCm,
                     rightEncoderDeltaCm: rightEncoderDeltaCm,
-                    driveData: driveData
+                    driveData: driveData,
+                    lastDrive: newData
                 };
                 raiseEvent('traveldata', travelData)
                 if (rangeInCm && leftEncoderDeltaCm >= rangeInCm) {
@@ -101,16 +111,9 @@
             //driveStartDate = null;
         }
 
-        var customEvents = {};
         function raiseEvent(eventName, data) {
-            var event = customEvents[eventName];
-            if (!event) {
-                if (typeof CustomEvent !== 'undefined') {
-                    event = new CustomEvent(eventName, { 'detail': data });
-                }
-                customEvents[eventName] = event;
-            }
-            if (event) {
+            if (typeof CustomEvent !== 'undefined') {
+                var event = new CustomEvent(eventName, { 'detail': data });
                 window.dispatchEvent(event);
             }
         }
