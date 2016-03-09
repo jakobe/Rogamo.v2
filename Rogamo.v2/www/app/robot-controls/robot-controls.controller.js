@@ -122,14 +122,22 @@
             });
         }
 
+        var doUpload = true,
+            uploadRetryInMs = 30 * 1000; //Retry in 30 seconds
         function uploadData(data) {
-            var url = 'http://10.0.0.132:1004/upload';
-            $http.post(url, data).then(function successCallback(response) {
-                console.log(response);
-            },
-            function errorCallback(response) {
-                console.log(response);
-            });
+            if (doUpload) {
+                var url = 'http://basher01:1004/upload';
+                $http.post(url, data).then(function successCallback(response) {
+                    console.log(response);
+                },
+                function errorCallback(response) {
+                    console.log(response);
+                    doUpload = false;
+                    setTimeout(function () {
+                        doUpload = true;
+                    }, uploadRetryInMs)
+                });
+            }
         }
 
         $scope.doubleRobotics = {
