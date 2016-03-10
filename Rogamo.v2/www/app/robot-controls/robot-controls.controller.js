@@ -4,7 +4,11 @@
     angular.module('app')
     .controller('RobotControlsController', RobotControlsController);
 
-    function RobotControlsController($scope, robot, $ionicPlatform, $http) {
+    RobotControlsController.$inject = ['$scope', '$http', '$cordovaRobot'];
+
+    function RobotControlsController($scope, $http, robot) {
+
+        console.log("RobotControlsController init...");
 
         $scope.labels = ["0", "200"];
         $scope.series = ['Drive'];
@@ -19,9 +23,8 @@
             alert(err);
         }
 
-        var audioPlugin,
-            sounds = {},
-            currentRange;
+        var audioPlugin = window.plugins ? window.plugins.NativeAudio : null,
+            sounds = {};
         function playSound(soundId) {
             var sound = sounds[soundId];
             if (sound && sound instanceof HTMLAudioElement) {
@@ -37,25 +40,19 @@
             alert('Could not play sound: "' + soundId + '" (error: ' + msg + ')');
         }
 
-        $ionicPlatform.ready(function () {
-            if (window.plugins && window.plugins.NativeAudio) {
-                audioPlugin = window.plugins.NativeAudio;
-            }
+        var soundFiles = [
+                { id: 'success', path: 'audio/109663__grunz__success_low.wav' },
+                { id: 'beep', path: 'audio/Speech On.wav' }
 
-            var soundFiles = [
-                    { id: 'success', path: 'audio/109663__grunz__success_low.wav' },
-                    { id: 'beep', path: 'audio/Speech On.wav' }
-                    
-            ];
-            for (var i = 0, length = soundFiles.length; i < length; i++) {
-                var sound = soundFiles[i];
-                if (audioPlugin) {
-                    audioPlugin.preloadSimple(sound.id, sound.path);
-                } else {
-                    sounds[sound.id] = new Audio(sound.path);
-                }
+        ];
+        for (var i = 0, length = soundFiles.length; i < length; i++) {
+            var sound = soundFiles[i];
+            if (audioPlugin) {
+                audioPlugin.preloadSimple(sound.id, sound.path);
+            } else {
+                sounds[sound.id] = new Audio(sound.path);
             }
-        });
+        }
 
         var next50Cm = 50;
         var maxRange = 0;
@@ -64,18 +61,6 @@
         function onTravelData(traveldata) {
             if (traveldata instanceof CustomEvent) {
                 traveldata = traveldata.detail;
-            }
-            if (traveldata.leftEncoderDeltaCm >= next50Cm) {
-                //robot.stop();
-                //playSound('beep');
-                next50Cm += 50;
-                //setTimeout(function () { alert('200!'); }, 0);
-            }
-            if (currentRange && traveldata.leftEncoderDeltaCm >= currentRange) {
-                robot.stop();
-                //playSound('success');
-                currentRange = null;
-                //setTimeout(function () { alert('200!'); }, 0);
             }
             if (traveldata.leftEncoderDeltaCm > maxRange) {
                 maxRange = traveldata.leftEncoderDeltaCm;
@@ -162,7 +147,6 @@
         }
 
         $scope.drive = function (direction, turn, range) {
-            currentRange = range;
             next50Cm = 50;
             maxRange = 0;
             rangeWhenStopDriving = 0.0;

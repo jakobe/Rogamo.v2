@@ -4,6 +4,8 @@
     angular.module('app')
     .controller('AccelerometerController', AccelerometerController);
 
+    AccelerometerController.$inject = ['$scope', '$cordovaRobot'];
+
     function AccelerometerController($scope, robot) {
 
         $scope.acceleration = {

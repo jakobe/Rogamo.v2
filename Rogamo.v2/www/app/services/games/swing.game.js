@@ -4,11 +4,10 @@
     angular.module('app.core')
     .factory('SwingGame', SwingGame);
 
-    SwingGame.$inject = ['RobotProvider', '$ionicPlatform'];
+    SwingGame.$inject = ['$cordovaRobot', '$ionicPlatform'];
 
-    function SwingGame(robotProvider, $ionicPlatform) {
-        var robot = null,
-            model = null,
+    function SwingGame(robot, $ionicPlatform) {
+        var model = null,
             onSuccess,
             onFailure,
             onGameOver,
@@ -21,10 +20,6 @@
             audioPlugin,
             sounds = {},
             backgroundSound = { id: 'background', path: 'audio/swing/268079__rbnx__birds-spring-mono-02.mp3' };
-
-        robotProvider.getRobot().then(function (robotInstance) {
-            robot = robotInstance;
-        });
 
         function playSound(soundId) {
             var sound = sounds[soundId];
