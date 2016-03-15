@@ -4,7 +4,6 @@
   "description": "Rogamo: An Ionic project",
   "private": true,
   "dependencies": {},
-<<<<<<< HEAD
   "devDependencies": {
     "bower": "^1.7.7",
     "gulp": "^3.9.1",
@@ -16,9 +15,6 @@
     "gulp-util": "^3.0.7",
     "shelljs": "^0.6.0"
   },
-=======
-  "devDependencies": {},
->>>>>>> origin/master
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-device-motion",
@@ -32,17 +28,14 @@
     }
   ],
   "cordovaPlatforms": [
-<<<<<<< HEAD
     {
       "platform": "ios",
       "version": "4.1.0",
       "locator": "ios@4.1.0"
-=======
-    "ios",
+    },
     {
       "platform": "android",
       "locator": "browser"
->>>>>>> origin/master
     }
   ]
 }
