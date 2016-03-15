@@ -12,15 +12,20 @@
         $stateProvider
 
         // setup an abstract state for the tabs directive
-          .state('tab', {
-              url: "/tab",
-              abstract: true,
-              templateUrl: "app/layout/tabs.html"
-          })
+        .state('tab', {
+            url: "/tab",
+            abstract: true,
+            templateUrl: "app/layout/tabs.html",
+            //  https://github.com/driftyco/ng-cordova/issues/8
+            //  use the resolve feature of the UI router to wait 
+            //  for ionic.Platform.ready signal before each state 
+            //  that might need a plugin
+            resolve: {
+                ionicReady: ionicReady
+            }
+        })
 
         // Each tab has its own nav history stack:
-
-
         .state('tab.dash', {
             url: '/dash',
             views: {
@@ -31,32 +36,41 @@
             }
         })
 
-         .state('tab.acc', {
-             url: '/acc',
-             views: {
-                 'tab-acc': {
-                     templateUrl: 'app/accelerometer/accelerometer.html',
-                     controller: 'AccelerometerController',
-                     resolve: {
-                         robot: function (RobotProvider) {
-                             return RobotProvider.getRobot();
-                         }
-                     }
-                 }
-             }
-         })
+        .state('tab.egg', {
+            url: '/eggthrow',
+            views: {
+                'tab-dash': {
+                    templateUrl: 'app/games/egg-throw.html',
+                    controller: 'EggThrowGameController'
+                }
+            }
+        })
+        .state('tab.swing', {
+            url: '/swing',
+            views: {
+                'tab-dash': {
+                    templateUrl: 'app/games/swing.html',
+                    controller: 'SwingGameController'
+                }
+            }
+        })
+
+        .state('tab.acc', {
+            url: '/acc',
+            views: {
+                'tab-acc': {
+                    templateUrl: 'app/accelerometer/accelerometer.html',
+                    controller: 'AccelerometerController'
+                }
+            }
+        })
 
         .state('tab.controls', {
             url: '/controls',
             views: {
                 'tab-controls': {
                     templateUrl: 'app/robot-controls/robot-controls.html',
-                    controller: 'RobotControlsController',
-                    resolve: {
-                        robot: function (RobotProvider) {
-                            return RobotProvider.getRobot();
-                        }
-                    }
+                    controller: 'RobotControlsController'
                 }
             }
         });
@@ -64,7 +78,17 @@
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/tab/dash');
 
-    };
+    }
+
+    ionicReady.$inject = ['$q', '$ionicPlatform', '$log'];
+    function ionicReady($q, $ionicPlatform, $log) {
+        var deferred = $q.defer();
+        $ionicPlatform.ready(function () {
+            $log.debug('ionic.Platform.ready');
+            deferred.resolve();
+        });
+        return deferred.promise;
+    }
 
 })();
 

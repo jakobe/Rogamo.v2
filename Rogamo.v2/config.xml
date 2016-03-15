@@ -45,7 +45,7 @@
     <icon src="resources\ios\icon\icon-small@3x.png" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="deployment-target" value="9.0" />
-    <vs:plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.0.1" />
+    <vs:plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.2.0" />
     <vs:plugin name="cordova-plugin-device" version="1.1.1" />
     <vs:plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6" />
     <engine name="browser" spec="~4.0.0" />

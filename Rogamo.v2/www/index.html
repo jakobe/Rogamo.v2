@@ -17,6 +17,8 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <script src="http://localhost:8200/cordova.js"></script>
+    
 
     <!-- your app's js -->
     <script src="app/app.js"></script>
@@ -29,16 +31,19 @@
 
     <!-- services -->
     <script src="app/services/canvas-renderer.service.js"></script>
-    <script src="app/services/robot.provider.js"></script>
+    <script src="app/services/robot.cordova.js"></script>
     <script src="app/services/fake.robot.js"></script>
 
     <!-- controllers -->
     <script src="app/dashboard/dashboard.controller.js"></script>
+    <script src="app/games/egg-throw.controller.js"></script>
+    <script src="app/games/swing.controller.js"></script>
     <script src="app/accelerometer/accelerometer.controller.js"></script>
     <script src="app/robot-controls/robot-controls.controller.js"></script>
 
     <!-- games -->
     <script src="app/services/games/egg-throw.game.js"></script>
+    <script src="app/services/games/swing.game.js"></script>
 </head>
 <body ng-app="app">
     <!--

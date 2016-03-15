@@ -80,3 +80,15 @@ button.icon.flip-x:before {
 .fade.ng-hide-add {
   transition: all linear 250ms;
 }
+
+
+/* Swing Game */
+.push-soft.button-calm {
+  background-color: rgb(255, 242, 0);
+  border-color: rgb(237, 225, 5);
+}
+
+.push-soft.button-calm.active, .push-soft.button-calm.activated {
+      background-color: rgb(237, 225, 5);
+      border-color: rgb(237, 225, 5);
+}

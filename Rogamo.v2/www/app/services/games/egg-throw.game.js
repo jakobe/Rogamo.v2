@@ -4,11 +4,10 @@
     angular.module('app.core')
     .factory('EggThrowGame', EggThrowGame);
 
-    EggThrowGame.$inject = ['RobotProvider', '$ionicPlatform'];
+    EggThrowGame.$inject = ['$cordovaRobot', '$ionicPlatform'];
 
-    function EggThrowGame(robotProvider, $ionicPlatform) {
-        var robot = null,
-            model = null,
+    function EggThrowGame(robot, $ionicPlatform) {
+        var model = null,
             onSuccess,
             onFailure,
             onGameOver,
@@ -22,10 +21,6 @@
             accelerometerWatchID,
             audioPlugin,
             sounds = {};
-
-        robotProvider.getRobot().then(function (robotInstance) {
-            robot = robotInstance;
-        });
 
         function playSound(soundId) {
             var sound = sounds[soundId];
@@ -79,12 +74,12 @@
             points = 0;
             $ionicPlatform.ready(function () {
                 //alert('watchAcceleration...');
+                var watchOptions = { frequency: 100 };
                 if (navigator.accelerometer) {
-                    var watchOptions = { frequency: 100 };
                     accelerometerWatchID = navigator.accelerometer.watchAcceleration(onWatchAccelerationSuccess, onWatchAccelerationError, watchOptions);
                 }
             });
-            robot.kickstand(robot.kickstandsCommands.up);
+            robot.retractKickstands();
             setTimeout(function () {
                 model.gameStarted = true;
                 robotStartDrive(parseFloat(model.speed), parseFloat(model.range) * 100);
@@ -95,12 +90,13 @@
             robotStopDrive();
             model.gameStarted = false;
             stopAccelerometer();
-            //setTimeout(function () { robot.kickstand(robot.kickstandsCommands.down); }, 500);
+            //setTimeout(function () { robot.deployKickstands(); }, 500);
         };
 
         function stopAccelerometer() {
             if (navigator.accelerometer && accelerometerWatchID) {
                 navigator.accelerometer.clearWatch(accelerometerWatchID);
+                accelerometerWatchID = null;
             }
         }
 
@@ -204,7 +200,7 @@
                 var driveSpeed = speed;// * 0.25;
                 var turn = 0.0;
                 robot.startTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
-                robot.variableDrive('drive', driveSpeed, turn, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
+                robot.drive(driveSpeed, turn, null, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
             }
         };
 
@@ -231,7 +227,7 @@
                     }
                     //Set timeout prevents overhead calling plugin:
                     robotDriveTimeoutId = setTimeout(function () {
-                        robot.variableDrive('drive', driveSpeed, turn, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
+                        robot.drive(driveSpeed, turn, null, onRobotDriveSucces, function (msg) { alert("Error! => " + msg); });
                     }, 50);
                 }
             } else {
@@ -243,7 +239,7 @@
             if (robotDriveTimeoutId) {
                 clearTimeout(robotDriveTimeoutId);
             }
-            robot.variableDrive('drive', 0, 0);
+            robot.stop();
             robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
             model.robotDriving = false;
         }
