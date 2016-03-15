@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "description": "Rogamo: An Ionic project",
   "private": true,
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-device-motion",
@@ -20,6 +18,10 @@
     }
   ],
   "cordovaPlatforms": [
-    "ios"
+    "ios",
+    {
+      "platform": "android",
+      "locator": "browser"
+    }
   ]
 }

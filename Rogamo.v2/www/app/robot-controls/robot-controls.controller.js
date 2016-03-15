@@ -59,9 +59,6 @@
         var rangeWhenStopDriving = 0;
         var rangeDrivenToStop = 0;
         function onTravelData(traveldata) {
-            if (traveldata instanceof CustomEvent) {
-                traveldata = traveldata.detail;
-            }
             if (traveldata.leftEncoderDeltaCm > maxRange) {
                 maxRange = traveldata.leftEncoderDeltaCm;
                 rangeDrivenToStop = maxRange - rangeWhenStopDriving;

@@ -258,9 +258,6 @@
         }
 
         function onTravelData(traveldata) {
-            if (traveldata instanceof CustomEvent) {
-                traveldata = traveldata.detail;
-            }
             if (typeof onSuccess === "function") {
                 onSuccess(traveldata);
             }
