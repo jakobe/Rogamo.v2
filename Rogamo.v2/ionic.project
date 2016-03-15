@@ -1,4 +1,7 @@
 {
   "name": "Rogamo.v2",
-  "app_id": ""
+  "app_id": "",
+  "gulpStartupTasks": [
+    "templatecache"
+  ]
 }

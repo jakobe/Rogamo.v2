@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "description": "Rogamo: An Ionic project",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "bower": "^1.7.7",
+    "gulp": "^3.9.1",
+    "gulp-angular-templatecache": "^1.8.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-util": "^3.0.7",
+    "shelljs": "^0.6.0"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",
@@ -20,6 +28,10 @@
     }
   ],
   "cordovaPlatforms": [
-    "ios"
+    {
+      "platform": "ios",
+      "version": "4.1.0",
+      "locator": "ios@4.1.0"
+    }
   ]
 }

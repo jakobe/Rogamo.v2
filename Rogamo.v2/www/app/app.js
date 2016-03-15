@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('app', ['ionic', 'ngAnimate', 'app.core'])
+    angular.module('app', ['ionic', 'ngAnimate', 'app.core', 'templates'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
