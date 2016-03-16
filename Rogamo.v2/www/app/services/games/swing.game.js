@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('SwingGame', SwingGame);
 
-    SwingGame.$inject = ['$cordovaRobot', '$ionicPlatform'];
+    SwingGame.$inject = ['$cordovaRobot', '$ionicPlatform', 'audioService'];
 
-    function SwingGame(robot, $ionicPlatform) {
+    function SwingGame(robot, $ionicPlatform, audioService) {
         var model = null,
             onSuccess,
             onFailure,
@@ -17,115 +17,51 @@
             totalPointsToWin = 5,
             direction = 1,
             robotDriveTimeoutId = null,
-            audioPlugin,
-            sounds = {},
-            backgroundSound = { id: 'background', path: 'audio/swing/268079__rbnx__birds-spring-mono-02.mp3' };
+            backgroundSound = { id: 'background', path: 'audio/swing/268079__rbnx__birds-spring-mono-02.mp3' },
+            softSounds = [
+              { id: 'laughter_soft_1', path: 'audio/swing/273152__hoerspielwerkstatt-hef__child-laughs_1.wav' },
+              { id: 'laughter_soft_2', path: 'audio/swing/55209a__noisecollector__laughingkidagain.wav' }
+            ],
+            mediumSounds = [
+              { id: 'laughter_medium_1', path: 'audio/swing/242932__obxjohn__child-laughing-wav-file.wav' }
+            ],
+            hardSounds = [
+              { id: 'laughter_hard_1', path: 'audio/swing/135387__ashjenx__child-laughing.wav' },
+              { id: 'laughter_hard_2', path: 'audio/swing/184616__kim-headlee__young-female-child-laughing.wav' },
+              { id: 'laughter_hard_3', path: 'audio/swing/315828__benjaminharveydesign__shriek-3-and-laugh.aiff' }
+            ],
+            soundFiles = [
+              { id: 'success', path: 'audio/109663__grunz__success_low.wav' }
+            ].concat(softSounds, mediumSounds, hardSounds);
 
-        function playSound(soundId) {
-            var sound = sounds[soundId];
-            if (sound && sound instanceof HTMLAudioElement) {
-                sound.play();
-            } else if (audioPlugin) {
-                audioPlugin.play(soundId, function (msg) { }, function (msg) { playSoundError(soundId, msg); });
-            } else {
-                playSoundError(soundId);
-            }
+        preloadSounds();
+
+        try {
+            window.addEventListener("batterystatus", onBatteryStatus, false);
+        }
+        catch (err) {
+            alert(err);
         }
 
-        function loopSound(soundId) {
-            var sound = sounds[soundId];
-            if (sound && sound instanceof HTMLAudioElement) {
-                sound.play();
-            } else if (audioPlugin) {
-                audioPlugin.loop(soundId, function (msg) { }, function (msg) { playSoundError(soundId, msg); });
-            } else {
-                playSoundError(soundId);
-            }
+        try {
+            window.addEventListener("batterylow", onBatteryLow, false);
+        }
+        catch (err) {
+            alert(err);
         }
 
-        function stopSound(soundId) {
-            var sound = sounds[soundId];
-            if (sound && sound instanceof HTMLAudioElement) {
-                sound.pause();
-            } else if (audioPlugin) {
-                audioPlugin.stop(soundId, function (msg) { }, function (msg) { stopSoundError(soundId, msg); });
-            }
+        function onBatteryLow(status) {
+            // Handle the online event
+            alert("BatteryLow! Level: " + status.batteryPercent + "\n" +
+                  "batteryIsFullyCharged: " + status.batteryIsFullyCharged);
         }
 
-        function playSoundError(soundId, msg) {
-            console.log('Could not play sound: "' + soundId + '" (error: ' + msg + ')');
+
+        function onBatteryStatus(status) {
+            // Handle the online event
+            //setTimeout(function () { audioService.play('success') }, 0);
+            //alert("Level: " + status.batteryPercent + "\n" + "batteryIsFullyCharged: " + status.batteryIsFullyCharged);
         }
-
-        function stopSoundError(soundId, msg) {
-            console.log('Could not stop sound: "' + soundId + '" (error: ' + msg + ')');
-        }
-
-        $ionicPlatform.ready(function () {
-            if (window.plugins && window.plugins.NativeAudio) {
-                audioPlugin = window.plugins.NativeAudio;
-            }
-
-            try {
-                window.addEventListener("batterystatus", onBatteryStatus, false);
-            }
-            catch (err) {
-                alert(err);
-            }
-
-            try {
-                window.addEventListener("batterylow", onBatteryLow, false);
-            }
-            catch (err) {
-                alert(err);
-            }
-
-            function onBatteryLow(status) {
-                // Handle the online event
-                alert("BatteryLow! Level: " + status.batteryPercent + "\n" +
-                      "batteryIsFullyCharged: " + status.batteryIsFullyCharged);
-            }
-
-
-            function onBatteryStatus(status) {
-                // Handle the online event
-                //setTimeout(function () { playSound('success') }, 0);
-                //alert("Level: " + status.batteryPercent + "\n" + "batteryIsFullyCharged: " + status.batteryIsFullyCharged);
-            }
-
-            var soundFiles = [
-                { id: 'success', path: 'audio/109663__grunz__success_low.wav' },
-                { id: 'laughter_soft_1', path: 'audio/swing/273152__hoerspielwerkstatt-hef__child-laughs_1.wav' },
-                { id: 'laughter_soft_2', path: 'audio/swing/55209a__noisecollector__laughingkidagain.wav' },
-                { id: 'laughter_medium_1', path: 'audio/swing/242932__obxjohn__child-laughing-wav-file.wav' },
-                { id: 'laughter_hard_1', path: 'audio/swing/135387__ashjenx__child-laughing.wav' },
-                { id: 'laughter_hard_2', path: 'audio/swing/184616__kim-headlee__young-female-child-laughing.wav' },
-                { id: 'laughter_hard_3', path: 'audio/swing/315828__benjaminharveydesign__shriek-3-and-laugh.aiff' }
-            ];
-            for (var i = 0, length = soundFiles.length; i < length; i++) {
-                var sound = soundFiles[i];
-                if (audioPlugin) {
-                    audioPlugin.preloadSimple(sound.id, sound.path);
-                } else {
-                    sounds[sound.id] = new Audio(sound.path);
-                }
-            }
-            var backgroundSoundVolume = 0.5,
-                backgroundSoundVoices = 1.0,
-                backgroundSoundDelay = 0.0;
-            if (audioPlugin) {
-                audioPlugin.preloadComplex(backgroundSound.id, backgroundSound.path, backgroundSoundVolume, backgroundSoundVoices, backgroundSoundDelay,
-                    function (msg) {
-                        console.log('Succes: ' + msg);
-                    },
-                    function (msg) {
-                        console.log('Error: ' + msg);
-                    });
-            } else {
-                sounds[backgroundSound.id] = new Audio(backgroundSound.path);
-                sounds[backgroundSound.id].loop = true;
-                sounds[backgroundSound.id].volume = backgroundSoundVolume;
-            }
-        });
 
         var game = {
             init: init,
@@ -145,9 +81,7 @@
 
         function play() {
             points = 0;
-            $ionicPlatform.ready(function () {
-                loopSound(backgroundSound.id);
-            });
+            audioService.loop(backgroundSound.id);
             robot.retractKickstands();
             try {
                 window.addEventListener("traveldata", onTravelData, false);
@@ -163,7 +97,7 @@
         function stop() {
             robotStopDrive();
             model.gameStarted = false;
-            stopSound(backgroundSound.id);
+            audioService.stop(backgroundSound.id);
             //setTimeout(function () { robot.deployKickstands(); }, 500);
         }
 
@@ -180,23 +114,19 @@
                 swingOut = true;
                 switch (force) {
                     case 'soft':
-                        var softSounds = ['laughter_soft_1', 'laughter_soft_2'];
-                        var randomSound = softSounds[Math.floor(Math.random() * softSounds.length)];
-                        playSound(randomSound);
+                        playRandomSound(softSounds);
                         rangeInCm -= (model.rangeLowDelta * 100);
                         speed = speed * 0.5;
                         robotStartDrive(speed, rangeInCm, onSwingOut);
                         break;
                     case 'medium':
-                        playSound('laughter_medium_1');
+                        playRandomSound(mediumSounds);
                         rangeInCm -= (model.rangeMediumDelta * 100);
                         speed = speed * 0.75;
                         robotStartDrive(speed, rangeInCm, onSwingOut);
                         break;
                     case 'hard':
-                        var hardSounds = ['laughter_hard_1', 'laughter_hard_2', 'laughter_hard_3'];
-                        var randomSound = hardSounds[Math.floor(Math.random() * hardSounds.length)];
-                        playSound(randomSound);
+                        playRandomSound(hardSounds);
                         robotStartDrive(speed, rangeInCm, onSwingOut);
                         break;
                 }
@@ -204,7 +134,7 @@
         }
 
         function onSwingOut(speed, rangeInCm) {
-            //playSound('laughter_soft_1');
+            //audioService.play('laughter_soft_1');
             var swingBackPauseInMs = parseFloat(model.swingbackpause) * 1000;
             setTimeout(function () {
                 robotStartDrive(-speed, rangeInCm);
@@ -265,7 +195,7 @@
             //    if (Math.abs(traveldata.leftEncoderDeltaCm) > currentRangeInCm || Math.abs(traveldata.rightEncoderDeltaCm) > currentRangeInCm) {
             //        robotStopDrive();
             //        swingOut = false;
-            //        //setTimeout(function() {playSound('success')}, 0);
+            //        //setTimeout(function() {audioService.play('success')}, 0);
             //        var speed = -(parseFloat(model.speed));
             //        //onSwingOut(speed, currentRangeInCm)
             //    }
@@ -282,7 +212,7 @@
                 }
                 if (Math.abs(data.leftEncoderDeltaCm) > rangeInCm || Math.abs(data.rightEncoderDeltaCm) > rangeInCm || driveCounter > 2000) {
                     robotStopDrive();
-                    //setTimeout(function() {playSound('success')}, 0);
+                    //setTimeout(function() {audioService.play('success')}, 0);
                     if (typeof onDriveEnd === 'function') {
                         onDriveEnd(speed, rangeInCm);
                     }
@@ -329,6 +259,26 @@
             robot.stop();
             robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
             model.robotDriving = false;
+        }
+
+        function preloadSounds() {
+          for (var i = 0, length = soundFiles.length; i < length; i++) {
+              var sound = soundFiles[i];
+              audioService.preloadSimple(sound.id, sound.path);
+          }
+          var backgroundSoundVolume = 0.5,
+              backgroundSoundVoices = 1.0,
+              backgroundSoundDelay = 0.0;
+          audioService.preloadComplex(backgroundSound.id, backgroundSound.path, backgroundSoundVolume, backgroundSoundVoices, backgroundSoundDelay,
+              function (msg) {},
+              function (msg) {
+                  console.log('Error loading complex sound: ' + msg);
+          });
+        }
+
+        function playRandomSound(soundArr) {
+          var randomSound = soundArr[Math.floor(Math.random() * soundArr.length)];
+          audioService.play(randomSound.id);
         }
 
     };

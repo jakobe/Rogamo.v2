@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('EggThrowGame', EggThrowGame);
 
-    EggThrowGame.$inject = ['$cordovaRobot', '$ionicPlatform'];
+    EggThrowGame.$inject = ['$cordovaRobot', '$ionicPlatform', 'audioService'];
 
-    function EggThrowGame(robot, $ionicPlatform) {
+    function EggThrowGame(robot, $ionicPlatform, audioService) {
         var model = null,
             onSuccess,
             onFailure,
@@ -19,41 +19,12 @@
             direction = 1,
             robotDriveTimeoutId,
             accelerometerWatchID,
-            audioPlugin,
-            sounds = {};
-
-        function playSound(soundId) {
-            var sound = sounds[soundId];
-            if (sound && sound instanceof HTMLAudioElement) {
-                sound.play();
-            } else if (audioPlugin) {
-                audioPlugin.play(soundId, function (msg) { }, function (msg) { playSoundError(soundId); });
-            } else {
-                playSoundError(soundId);
-            }
-        }
-
-        function playSoundError(soundId) {
-            console.log('Could not play sound: "' + soundId + '"')
-        }
-
-        $ionicPlatform.ready(function () {
-            if (window.plugins && window.plugins.NativeAudio) {
-                audioPlugin = window.plugins.NativeAudio;
-            }
-            var soundFiles = [
+            soundFiles = [
                 { id: 'success', path: 'audio/109663__grunz__success_low.wav' },
                 { id: 'gameover', path: 'audio/82248__robinhood76__01299-smashing-egg-1.wav' }
             ];
-            for (var i = 0, length = soundFiles.length; i < length; i++) {
-                var sound = soundFiles[i];
-                if (audioPlugin) {
-                    audioPlugin.preloadSimple(sound.id, sound.path);
-                } else {
-                    sounds[sound.id] = new Audio(sound.path);
-                }
-            }
-        });
+
+        preloadSounds();
 
         var game = {
             init: init,
@@ -110,7 +81,7 @@
                             onRobotPush({ acceleration: acceleration });
                         //}, 0);
                     }
-                    playSound('gameover');
+                    audioService.play('gameover');
                     if (typeof onGameOver === "function") {
                         setTimeout(function () {
                             onGameOver(false, {});
@@ -123,7 +94,7 @@
                     points++;
                     robotStopDrive();
                     preventPush = true;
-                    playSound('success');
+                    audioService.play('success');
                     if (typeof onRobotPush === "function") {
                         //setTimeout(function () {
                         onRobotPush({ acceleration: acceleration });
@@ -214,7 +185,7 @@
                 }
                 if (data.leftEncoderDeltaCm > currentRangeInCm || data.rightEncoderDeltaCm > currentRangeInCm || data.leftEncoderDeltaCm < -currentRangeInCm || data.rightEncoderDeltaCm < -currentRangeInCm || driveCounter > 2000) {
                     robotStopDrive();
-                    playSound('success');
+                    audioService.play('success');
                     //setTimeout(function () {
                     //    alert('Drive end! driveCounter: ' + driveCounter + ' | leftEncoderDeltaCm: ' + data.leftEncoderDeltaCm + ' | rightEncoderDeltaCm: ' + data.rightEncoderDeltaCm);
                     //}, 0);
@@ -242,6 +213,13 @@
             robot.stop();
             robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
             model.robotDriving = false;
+        }
+
+        function preloadSounds() {
+          for (var i = 0, length = soundFiles.length; i < length; i++) {
+              var sound = soundFiles[i];
+              audioService.preloadSimple(sound.id, sound.path);
+          }
         }
 
     };
