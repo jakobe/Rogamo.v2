@@ -13,7 +13,7 @@ var paths = {
   templates: ['./www/app/**/*.html']
 };
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['sass', 'templatecache']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -30,6 +30,7 @@ gulp.task('sass', function(done) {
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.templates, ['templatecache']);
 });
 
 gulp.task('install', ['git-check'], function() {
