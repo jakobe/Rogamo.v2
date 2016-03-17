@@ -54,7 +54,7 @@
             <div class="title">
                 <!--<span ng-bind="'DR serial: {0} | speed: {1} | message: {2}' | format: doubleRobotics.serial:model.speed:doubleRobotics.message"></span>-->
                 <i ng-class="{'icon ion-stop': model.robotDriving === false, 'icon ion-play': model.robotDriving === true}"></i>
-                <!--DR serial: {{model.robotData.serial}} | speed: {{model.speed}} | left: {{model.robotData.leftEncoderDeltaCm}}cm | right: {{model.robotData.rightEncoderDeltaCm}}cm | message: {{model.robotData.message}}-->
+                <!--DR serial: {{model.robotData.serial}} | speed: {{model.speed}} | left: {{model.robotData.leftEncoderTotalCm}}cm | right: {{model.robotData.rightEncoderTotalCm}}cm | message: {{model.robotData.message}}-->
                 Skub: {{acceleration.z}}
             </div>
         </div>

@@ -183,17 +183,17 @@
                 if (typeof onSuccess === "function") {
                     onSuccess(data);
                 }
-                if (data.leftEncoderDeltaCm > currentRangeInCm || data.rightEncoderDeltaCm > currentRangeInCm || data.leftEncoderDeltaCm < -currentRangeInCm || data.rightEncoderDeltaCm < -currentRangeInCm || driveCounter > 2000) {
+                if (data.leftEncoderTotalCm > currentRangeInCm || data.rightEncoderTotalCm > currentRangeInCm || data.leftEncoderTotalCm < -currentRangeInCm || data.rightEncoderTotalCm < -currentRangeInCm || driveCounter > 2000) {
                     robotStopDrive();
                     audioService.play('success');
                     //setTimeout(function () {
-                    //    alert('Drive end! driveCounter: ' + driveCounter + ' | leftEncoderDeltaCm: ' + data.leftEncoderDeltaCm + ' | rightEncoderDeltaCm: ' + data.rightEncoderDeltaCm);
+                    //    alert('Drive end! driveCounter: ' + driveCounter + ' | leftEncoderTotalCm: ' + data.leftEncoderTotalCm + ' | rightEncoderTotalCm: ' + data.rightEncoderTotalCm);
                     //}, 0);
                 } else {
-                    if (data.leftEncoderDeltaCm >= (currentRangeInCm * 0.65)) {
+                    if (data.leftEncoderTotalCm >= (currentRangeInCm * 0.65)) {
                         driveSpeed = currentSpeed * 0.75;
                     }
-                    if (data.leftEncoderDeltaCm >= (currentRangeInCm * 0.85)) {
+                    if (data.leftEncoderTotalCm >= (currentRangeInCm * 0.85)) {
                         driveSpeed = currentSpeed * 0.50;
                     }
                     //Set timeout prevents overhead calling plugin:

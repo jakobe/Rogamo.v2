@@ -106,7 +106,7 @@
             var returnRangeLeftInCm = 0;
             if (model.robotDriving) {
                 robotStopDrive();
-                returnRangeLeftInCm = currentRangeInCm - model.robotData.leftEncoderDeltaCm;
+                returnRangeLeftInCm = currentRangeInCm - model.robotData.leftEncoderTotalCm;
             }
             if (!model.robotDriving) {
                 var rangeInCm = (parseFloat(model.range) * 100) - returnRangeLeftInCm;
@@ -192,7 +192,7 @@
                 onSuccess(traveldata);
             }
             //if (swingOut) {
-            //    if (Math.abs(traveldata.leftEncoderDeltaCm) > currentRangeInCm || Math.abs(traveldata.rightEncoderDeltaCm) > currentRangeInCm) {
+            //    if (Math.abs(traveldata.leftEncoderTotalCm) > currentRangeInCm || Math.abs(traveldata.rightEncoderTotalCm) > currentRangeInCm) {
             //        robotStopDrive();
             //        swingOut = false;
             //        //setTimeout(function() {audioService.play('success')}, 0);
@@ -210,14 +210,14 @@
                 if (typeof onSuccess === "function") {
                     onSuccess(data);
                 }
-                if (Math.abs(data.leftEncoderDeltaCm) > rangeInCm || Math.abs(data.rightEncoderDeltaCm) > rangeInCm || driveCounter > 2000) {
+                if (Math.abs(data.leftEncoderTotalCm) > rangeInCm || Math.abs(data.rightEncoderTotalCm) > rangeInCm || driveCounter > 2000) {
                     robotStopDrive();
                     //setTimeout(function() {audioService.play('success')}, 0);
                     if (typeof onDriveEnd === 'function') {
                         onDriveEnd(speed, rangeInCm);
                     }
                 } else {
-                    model.currentSpeed = driveSpeed = deAccelerate(speed, rangeInCm, Math.abs(data.leftEncoderDeltaCm));
+                    model.currentSpeed = driveSpeed = deAccelerate(speed, rangeInCm, Math.abs(data.leftEncoderTotalCm));
                     //Set timeout prevents overhead calling plugin:
                     robotDriveTimeoutId = setTimeout(function () {
                         robot.drive(driveSpeed, turn, null, function (data) { onRobotDriveSucces(data, speed, rangeInCm, onDriveEnd); }, function (msg) { alert("Error! => " + msg); });

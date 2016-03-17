@@ -59,8 +59,8 @@
         var rangeWhenStopDriving = 0;
         var rangeDrivenToStop = 0;
         function onTravelData(traveldata) {
-            if (traveldata.leftEncoderDeltaCm > maxRange) {
-                maxRange = traveldata.leftEncoderDeltaCm;
+            if (traveldata.leftEncoderTotalCm > maxRange) {
+                maxRange = traveldata.leftEncoderTotalCm;
                 rangeDrivenToStop = maxRange - rangeWhenStopDriving;
             }
 
@@ -96,7 +96,7 @@
             $scope.$apply(function () {
                 $scope.doubleRobotics = {
                     serial: "00-000000",
-                    message: "left: " + traveldata.leftEncoderDeltaCm + " | right: " + traveldata.rightEncoderDeltaCm + " | max: " + maxRange + " | rangeDrivenToStop: " + rangeDrivenToStop
+                    message: "left: " + traveldata.leftEncoderTotalCm + " | right: " + traveldata.rightEncoderTotalCm + " | max: " + maxRange + " | rangeDrivenToStop: " + rangeDrivenToStop
                 };
                 $scope.driveData = driveDataToDisplay;
                 $scope.labels = labels;

@@ -90,7 +90,7 @@
             <div class="title">
                 <!--<span ng-bind="'DR serial: {0} | speed: {1} | message: {2}' | format: doubleRobotics.serial:model.speed:doubleRobotics.message"></span>-->
                 <i ng-class="{'icon ion-stop': model.robotDriving === false, 'icon ion-play': model.robotDriving === true}"></i>
-                Skub: {{force}} | speed: {{model.currentSpeed}} | left: {{model.robotData.leftEncoderDeltaCm}}cm | right: {{model.robotData.rightEncoderDeltaCm}}cm
+                Skub: {{force}} | speed: {{model.currentSpeed}} | left: {{model.robotData.leftEncoderTotalCm}}cm | right: {{model.robotData.rightEncoderTotalCm}}cm
             </div>
         </div>
         <div id="gameContainer" ng-show="model.gameStarted === true" class="ng-hide fade" style="position: absolute; left: 0; top: 0; right: 0; bottom: 44px; background-color: rgb(255, 255, 255); z-index: 99; text-align: center">
