@@ -41,14 +41,14 @@
         <splash height="2208" src="res/screens/ios/screen-iphone-portrait-736h.png" width="1242" />
         <splash height="1242" src="res/screens/ios/screen-iphone-landscape-736h.png" width="2208" />
     </platform>
-    <vs:plugin name="cordova-plugin-device-motion" version="1.2.0" />
     <icon src="resources\ios\icon\icon-small@3x.png" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="deployment-target" value="9.0" />
-    <vs:plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.2.0" />
-    <vs:plugin name="cordova-plugin-device" version="1.1.1" />
-    <vs:plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6" />
-    <engine name="browser" spec="~4.0.0" />
+    <plugin name="cordova-plugin-device" version="1.1.1" />
+    <plugin name="cordova-plugin-device-motion" spec="https://github.com/jakobe/cordova-plugin-device-motion.git" />
+    <plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6" />
+    <plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.3.0" />
     <plugin name="cordova-plugin-wkwebview-engine" spec="~1.0.2" />
+    <engine name="browser" spec="~4.0.0" />
     <engine name="ios" spec="~4.1.0" />
 </widget>

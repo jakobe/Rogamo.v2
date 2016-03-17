@@ -17,7 +17,6 @@
   },
   "cordovaPlugins": [
     "cordova-plugin-device",
-    "cordova-plugin-device-motion",
     {
       "locator": "https://github.com/jakobe/cordova-plugin-doublerobotics.git",
       "id": "cordova-plugin-doublerobotics"
@@ -25,7 +24,12 @@
     {
       "locator": "https://github.com/SidneyS/cordova-plugin-nativeaudio.git",
       "id": "cordova-plugin-nativeaudio"
-    }
+    },
+    {
+      "locator": "https://github.com/jakobe/cordova-plugin-device-motion.git",
+      "id": "cordova-plugin-device-motion"
+    },
+    "cordova-plugin-wkwebview-engine"
   ],
   "cordovaPlatforms": [
     {
