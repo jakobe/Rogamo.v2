@@ -1,25 +1,49 @@
-﻿<ion-view view-title="Accelerometer">
-    <ion-content padding="true" scroll="false">
-        <p>Acceleration.X: {{acceleration.x}}</p>
-        <p>Acceleration.Y: {{acceleration.y}}</p>
-        <p>Acceleration.Z: {{acceleration.z}}</p>
-        <p>Acceleration.Z > 2: {{acceleration.z > 2}}</p>
-        <p>Acceleration.Z < -2: {{acceleration.z < -2}}</p>
-        <p>direction: {{acceleration.direction}}</p>
-        <!--<p>status: {{doubleRobotics.message}}</p>
-        <p>serial: {{doubleRobotics.serial}}</p>
-        <p>battery: {{doubleRobotics.batteryPercent}}</p>-->
-        <p ng-show="acceleration.direction == 'forward'" style="font-size: 50px;"><i class="ion-arrow-up-a balanced"></i></p>
-        <p ng-show="acceleration.direction == 'stop'" style="font-size: 50px;"><i class="ion-stop assertive"></i></p>
-        <p ng-show="acceleration.direction == 'back'" style="font-size: 50px;"><i class="ion-arrow-down-a balanced"></i></p>
-
+<ion-view view-title="Accelerometer">
+  <ion-content padding="true" scroll="false">
+    <p ng-show="collision.direction == 'forward'" style="font-size: 50px;"><i class="ion-arrow-up-a balanced"></i></p>
+    <p ng-show="collision.direction == 'stop'" style="font-size: 50px;"><i class="ion-stop assertive"></i></p>
+    <p ng-show="collision.direction == 'back'" style="font-size: 50px;"><i class="ion-arrow-down-a balanced"></i></p>
+    <p>Last Collision Force: {{collision.force | number: 5}}</p>
+    <div class="row">
+      <div class="col">
         <button class="button button-outline icon-left ion-chevron-up" ng-click="retractKickstands()">Retract kickstands</button>
         <button class="button button-outline icon-left ion-chevron-down" ng-click="deployKickstands()">Deploy kickstands</button>
 
-        <button class="button icon ion-chevron-up" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="driveBackward()"></button>
-        <button class="button icon ion-stop" style="display: block; padding: 40px 61px; margin: 10px;"></button>
-        <button class="button icon ion-chevron-down" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="driveForward()"></button>
+        <button class="button icon ion-chevron-up" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="drive(-0.5, 0.0, 100)"></button>
+        <button class="button icon ion-stop" style="display: block; padding: 40px 61px; margin: 10px;" ng-click="stop()"></button>
+        <button class="button icon ion-chevron-down" style="display: block; padding: 40px 60px; margin: 10px;" ng-click="drive(0.5, 0.0, 100)"></button>
 
         <button class="button icon ion-refresh" style="display: block; padding: 40px 60px; margin: 10px; margin-top: 50px;" ng-click="turnByDegrees(180)"></button>
-</ion-content>
+      </div>
+      <div class="col">
+        <div class="list">
+          <div class="item item-divider">Minimum skub: {{collisionSettings.minAcceleration | number: 1}}</div>
+          <div class="item">
+            <div class="range">
+              <i class="icon ion-android-hand balanced"></i>
+              <input type="range" name="minAcceleration" ng-model="collisionSettings.minAcceleration" min="1" max="10" step="0.5">
+              <i class="icon ion-android-hand assertive"></i>
+            </div>
+          </div>
+
+          <div class="item item-divider">
+            Settings
+          </div>
+
+          <ion-toggle ng-model="collisionSettings.detectCollisions"
+                      ng-change="detectCollisionsChange()">
+            Registrer skub
+          </ion-toggle>
+        </div>
+        <button class="button button-outline icon-left ion-upload" ng-click="uploadData()">Upload Data</button>
+        <p>Acceleration.X: {{acceleration.x}}</p>
+        <p>Acceleration.Y: {{acceleration.y}}</p>
+        <p>Acceleration.Z: {{acceleration.z}}</p>
+        <p>UserAcceleration.X: {{userAcceleration.x}}</p>
+        <p>UserAcceleration.Y: {{userAcceleration.y}}</p>
+        <p>UserAcceleration.Z: {{userAcceleration.z}}</p>
+        <p>Collsion Direction: {{collision.direction}}</p>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>

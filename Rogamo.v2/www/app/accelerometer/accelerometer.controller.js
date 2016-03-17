@@ -4,97 +4,125 @@
     angular.module('app')
     .controller('AccelerometerController', AccelerometerController);
 
-    AccelerometerController.$inject = ['$scope', '$cordovaRobot'];
+    AccelerometerController.$inject = ['$scope', 'RobotEngine', '$http'];
 
-    function AccelerometerController($scope, robot) {
+    function AccelerometerController($scope, robot, $http) {
+      var collisionWatchID,
+          accelerometerWatchID,
+          watching = true;
 
+      init();
+
+      function init() {
+        setInitScope();
+        detectCollisionsChange();
+        accelerometerWatchID = watchAcceleration();
+        //setTimeout(function() {
+            //window.addEventListener("collision", onCollision, false);
+        //    window.addEventListener("traveldata", onTraveldata, false);
+        //}, 500);
+      }
+
+      function watchAcceleration() {
+        var options = { frequency: 500 };
+        if (navigator.accelerometer) {
+            return navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
+        }
+        return null;
+      }
+
+      function setInitScope() {
         $scope.acceleration = {
-            x: 0,
-            y: 0,
-            z: 0,
-            direction: 'stop'
+           x: 0,
+           y: 0,
+           z: 0,
+           direction: 'stop'
+        };
+        $scope.userAcceleration = {
+           x: 0,
+           y: 0,
+           z: 0,
+           direction: 'stop'
+        };
+        $scope.collision = {
+           type: '',
+           direction: 'stop',
+           force: 0.0
         };
 
-        //if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-        //    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        //}
+        $scope.collisionSettings = {
+           minAcceleration: 2.0,
+           detectCollisions: true
+        };
+
+        $scope.detectCollisionsChange = detectCollisionsChange;
 
         $scope.retractKickstands = robot.retractKickstands;
         $scope.deployKickstands = robot.deployKickstands;
+        $scope.turnByDegrees = robot.turnByDegrees;
+        $scope.stop = robot.stop;
+        $scope.drive = robot.drive;
+      }
 
-        $scope.turnByDegrees = function (degrees) {
-            robot.turnByDegrees(180, function (msg) { alert("Succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
-        };
+      $scope.stop = function() {
+       var devicemotionEvent = new CustomEvent('devicemotion', {
+         'detail' : {
+           userAccelerationX: 1.0,
+           userAccelerationY: 2.0,
+           userAccelerationZ: 3.0
+         }
+       });
+       window.dispatchEvent(devicemotionEvent);
+      };
 
-
-        $scope.driveForward = function () {
-            var counter = 0;
-            var driveSpeed = 0.25;
-            var turn = 0.0;
-            var intervalId = setInterval(function () {
-                if (counter === 10) {
-                    driveSpeed = 0.5
-                    turn = 0.25;
-                }
-                if (counter === 20) {
-                    driveSpeed = 1.0
-                }
-                if (counter === 40) {
-                    driveSpeed = 0.5
-                }
-                if (counter === 50) {
-                    driveSpeed = 0.25
-                    turn = 0.0;
-                }
-                if (counter >= 60) {
-                    clearInterval(intervalId);
-                } else {
-                    robot.drive(driveSpeed, turn, null,
-                        function (data) {
-                            $scope.doubleRobotics = data;
-                        },
-                        function (msg) { alert("Error! => " + msg); });
-                }
-                counter++;
-            }, 100);
-        };
-
-        $scope.driveBackward = function () {
-            var counter = 0;
-            var intervalId = setInterval(function () {
-                if (counter >= 20) {
-                    clearInterval(intervalId);
-                } else {
-                    robot.drive(-0.5);
-                    counter++;
-                }
-            }, 100);
-        };
-
-        function onAccelerometerSuccess(acceleration) {
-            $scope.$apply(function () {
-                $scope.acceleration.x = acceleration.x;
-                $scope.acceleration.y = acceleration.y;
-                $scope.acceleration.z = acceleration.z;
-                if (acceleration.z > 2) {
-                    $scope.acceleration.direction = 'forward';
-                } else if (acceleration.z < -2) {
-                    $scope.acceleration.direction = 'back';
-                } else {
-                    $scope.acceleration.direction = 'stop';
-                }
-            });
+      function detectCollisionsChange() {
+        if ($scope.collisionSettings.detectCollisions) {
+          collisionWatchID = robot.watchCollision(onCollision);
+        } else if (collisionWatchID) {
+          robot.clearWatchCollision(collisionWatchID);
+          collisionWatchID = null;
         }
+      }
 
-        function onAccelerometerError() {
-            alert('Error getting accelerometer data!');
-        }
+      function onCollision(collision) {
+        robot.stop();
+        robot.turnByDegrees(180);
+        setTimeout(function() {
+          $scope.$apply(function () {
+            $scope.collision.direction = 'stop';
+          });
+        }, 1000);
 
-        if (navigator.accelerometer) {
-            var options = { frequency: 500 };
-            var watchID = navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
-        }
-    };
+        $scope.$apply(function () {
+          $scope.collision = collision;
+        });
+        console.log('handleCollision - type: ' + collision.type + ' | direction: ' + collision.direction);
+      }
 
+    function onAccelerometerSuccess(acceleration) {
+      $scope.$apply(function () {
+        $scope.acceleration.x = acceleration.x;
+        $scope.acceleration.y = acceleration.y;
+        $scope.acceleration.z = acceleration.z;
+        $scope.userAcceleration.x = acceleration.userAccelerationX;
+        $scope.userAcceleration.y = acceleration.userAccelerationY;
+        $scope.userAcceleration.z = acceleration.userAccelerationZ;
+      });
+    }
+
+    function onAccelerometerError() {
+      alert('Error getting accelerometer data!');
+    }
+
+    function onTraveldata(traveldata) {
+      var lastDrive = traveldata.lastDrive,
+      dataToUpload;
+      if (lastDrive) {
+        dataToUpload = [lastDrive.time, lastDrive.speed, lastDrive.start];
+        console.log(dataToUpload);
+        //uploadData(dataToUpload);
+      }
+    }
+  }
 
 })();
