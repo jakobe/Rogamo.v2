@@ -22,13 +22,18 @@
           poleUp: robot.poleUp,
           retractKickstands: robot.retractKickstands,
           deployKickstands: robot.deployKickstands,
+          watchTravelData: watchTravelData,
           watchCollision: watchCollision,
           clearWatchCollision: clearWatchCollision
       };
       return robotEngine;
 
+      function watchTravelData(listener) {
+        robot.watchTravelData(listener);
+      }
+
       function watchCollision(listener) {
-        //robot.watchCollision(listener);
+        robot.watchCollision(listener);
         //var wid = listener.observer_guid;
         var id = _createGuid();
         console.log('watchCollision... id: ' + id);
