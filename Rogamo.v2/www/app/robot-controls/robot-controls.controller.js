@@ -4,9 +4,9 @@
     angular.module('app')
     .controller('RobotControlsController', RobotControlsController);
 
-    RobotControlsController.$inject = ['$scope', '$http', '$cordovaRobot'];
+    RobotControlsController.$inject = ['$scope', 'RobotEngine', '$http'];
 
-    function RobotControlsController($scope, $http, robot) {
+    function RobotControlsController($scope, robot, $http) {
 
         console.log("RobotControlsController init...");
 
@@ -16,12 +16,7 @@
             [1, 0]
         ];
 
-        try {
-            window.addEventListener("traveldata", onTravelData, false);
-        }
-        catch (err) {
-            alert(err);
-        }
+        robot.watchTravelData(onTravelData);
 
         var audioPlugin = window.plugins ? window.plugins.NativeAudio : null,
             sounds = {};
