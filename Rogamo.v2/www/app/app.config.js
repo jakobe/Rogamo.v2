@@ -37,7 +37,7 @@
             }
         })
 
-        .state('tab.egg', {
+        .state('tab.eggthrow', {
             url: '/eggthrow',
             views: {
                 'tab-dash': {
