@@ -33,20 +33,25 @@
       }
 
       function watchCollision(listener) {
-        robot.watchCollision(listener);
-        //var wid = listener.observer_guid;
-        var id = _createGuid();
-        console.log('watchCollision... id: ' + id);
-        collisionListeners.push({id: id, listener: listener});
-        if (accelerometerWatchID === null) {
-          accelerometerWatchID = _startWatchAcceleration();
+        var id = null;
+        if (typeof listener === "function") {
+          id = _createGuid();
+          console.log('watchCollision... id: ' + id);
+          collisionListeners.push({id: id, listener: listener});
+          // If we just registered the first collision handler, make sure native listeners are started for robot + accelerometer:
+          if (collisionListeners.length === 1) {
+            robot.watchCollision(_onRobotCollision);
+            //var wid = listener.observer_guid;
+            if (accelerometerWatchID === null) {
+              accelerometerWatchID = _startWatchAcceleration();
+            }
+          }
         }
         return id;
       }
 
       function clearWatchCollision(id) {
         var listener = _removeListener(collisionListeners, id);
-        debugger;
         if (listener) {
           robot.clearWatchCollision(listener);
         }
@@ -65,9 +70,18 @@
 
       function _dispatchEvent(listeners, eventData) {
         var tempListeners = listeners.slice(0);
-        //accel = new Acceleration(a.x, a.y, a.z, a.userAccelerationX, a.userAccelerationY, a.userAccelerationZ, a.rotationX, a.rotationY, a.rotationZ, a.yaw, a.pitch, a.roll, a.timestamp);
         for (var i = 0, length = tempListeners.length; i < length; i++) {
             tempListeners[i].listener(eventData);
+        }
+      }
+
+      function _onRobotCollision(collisionDetails) {
+        if (!collisionDetectionSuspended) {
+          collisionDetectionSuspended = true;
+          _dispatchEvent(collisionListeners, collisionDetails);
+          setTimeout(function() {
+            collisionDetectionSuspended = false;
+          }, collisionDelayInMs)
         }
       }
 
@@ -91,8 +105,8 @@
       }
 
       function _onAccelerometerSuccess(acceleration) {
+        var minAcceleration = 2;
         if (!collisionDetectionSuspended) {
-          var minAcceleration = 2;
           if (Math.abs(acceleration.userAccelerationZ) >= minAcceleration) {
                 collisionDetectionSuspended = true;
                 var collisionDetails = {
