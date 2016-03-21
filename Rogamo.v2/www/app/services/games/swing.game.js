@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('SwingGame', SwingGame);
 
-    SwingGame.$inject = ['$cordovaRobot', '$ionicPlatform', 'audioService'];
+    SwingGame.$inject = ['RobotEngine', 'audioService'];
 
-    function SwingGame(robot, $ionicPlatform, audioService) {
+    function SwingGame(robot, audioService) {
         var model = null,
             onSuccess,
             onFailure,
