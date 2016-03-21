@@ -6,14 +6,16 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
-var templateCache = require("gulp-angular-templatecache");
+var templateCache = require('gulp-angular-templatecache');
+var htmlreplace = require('gulp-html-replace');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  templates: ['./www/app/**/*.html']
+  templates: ['./www/app/**/*.html'],
+  index_html: ['./www/index.html']
 };
 
-gulp.task('default', ['sass', 'templatecache']);
+gulp.task('default', ['sass', 'templatecache', 'remove-cordova-browserscript']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -31,6 +33,7 @@ gulp.task('sass', function(done) {
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
   gulp.watch(paths.templates, ['templatecache']);
+  gulp.watch(paths.index_html, ['remove-cordova-browserscript']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -66,4 +69,16 @@ gulp.task("templatecache", function() {
             standalone: true
         }))
         .pipe(gulp.dest("./www/app"));
+});
+
+gulp.task("remove-cordova-browserscript", function() {
+  console.log('Remove cordova browserscript...');
+  gulp.src(paths.index_html)
+    .pipe(htmlreplace({
+        'cordovajs': {
+            src: null,
+            tpl: ''
+        }
+    }))
+    .pipe(gulp.dest('./platforms/ios/www'));
 });
