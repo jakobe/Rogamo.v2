@@ -7,6 +7,12 @@
     RobotControlsController.$inject = ['$scope', 'RobotEngine', '$http'];
 
     function RobotControlsController($scope, robot, $http) {
+        $scope.$on('$ionicView.enter', function() {
+          robot.watchTravelData(onTravelData);
+        });
+        $scope.$on('$ionicView.leave', function() {
+          robot.clearWatchTravelData(onTravelData);
+        });
 
         console.log("RobotControlsController init...");
 
@@ -16,7 +22,6 @@
             [1, 0]
         ];
 
-        robot.watchTravelData(onTravelData);
 
         var audioPlugin = window.plugins ? window.plugins.NativeAudio : null,
             sounds = {};
@@ -99,7 +104,7 @@
             });
         }
 
-        var doUpload = true,
+        var doUpload = false,
             uploadRetryInMs = 30 * 1000; //Retry in 30 seconds
         function uploadData(data) {
             if (doUpload) {
