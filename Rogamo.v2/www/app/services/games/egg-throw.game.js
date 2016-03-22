@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('EggThrowGame', EggThrowGame);
 
-    EggThrowGame.$inject = ['RobotEngine', '$ionicPlatform', 'audioService'];
+    EggThrowGame.$inject = ['RobotEngine', 'audioService'];
 
-    function EggThrowGame(robot, $ionicPlatform, audioService) {
+    function EggThrowGame(robot, audioService) {
         var model = null,
             handlers = {},
             events = {
