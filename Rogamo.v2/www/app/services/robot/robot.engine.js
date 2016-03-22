@@ -23,6 +23,7 @@
           retractKickstands: robot.retractKickstands,
           deployKickstands: robot.deployKickstands,
           watchTravelData: watchTravelData,
+          clearWatchTravelData: clearWatchTravelData,
           watchCollision: watchCollision,
           clearWatchCollision: clearWatchCollision
       };
@@ -30,6 +31,10 @@
 
       function watchTravelData(listener) {
         robot.watchTravelData(listener);
+      }
+
+      function clearWatchTravelData(listener) {
+        robot.clearWatchTravelData(listener);
       }
 
       function watchCollision(listener) {
