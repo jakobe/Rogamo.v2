@@ -25,7 +25,8 @@
           watchTravelData: watchTravelData,
           clearWatchTravelData: clearWatchTravelData,
           watchCollision: watchCollision,
-          clearWatchCollision: clearWatchCollision
+          clearWatchCollision: clearWatchCollision,
+          getCompassHeading: _getCompassHeading
       };
       return robotEngine;
 
@@ -48,7 +49,7 @@
             robot.watchCollision(_onRobotCollision);
             //var wid = listener.observer_guid;
             if (accelerometerWatchID === null) {
-              accelerometerWatchID = _startWatchAcceleration();
+              //accelerometerWatchID = _startWatchAcceleration();
             }
           }
         }
@@ -129,6 +130,14 @@
 
       function _onAccelerometerError(acceleration) {
 
+      }
+
+      function _getCompassHeading(compassSuccess, compassError) {
+        if (navigator.compass) {
+          navigator.compass.getCurrentHeading(compassSuccess, compassError);
+        } else {
+          compassError({code: 0, text: 'compass not supported'});
+        }
       }
 
       function _createGuid()
