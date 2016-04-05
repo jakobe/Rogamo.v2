@@ -8,19 +8,15 @@
 
     function AccelerometerController($scope, robot, $http) {
       var collisionWatchID,
-          accelerometerWatchID,
-          watching = true;
+          accelerometerWatchID;
 
       init();
 
       function init() {
         setInitScope();
         detectCollisionsChange();
+        robot.watchTravelData(onTraveldata);
         accelerometerWatchID = watchAcceleration();
-        //setTimeout(function() {
-            //window.addEventListener("collision", onCollision, false);
-        //    window.addEventListener("traveldata", onTraveldata, false);
-        //}, 500);
       }
 
       function watchAcceleration() {
@@ -64,16 +60,53 @@
         $scope.drive = robot.drive;
       }
 
-      $scope.stop = function() {
-       var devicemotionEvent = new CustomEvent('devicemotion', {
-         'detail' : {
-           userAccelerationX: 1.0,
-           userAccelerationY: 2.0,
-           userAccelerationZ: 3.0
-         }
-       });
-       window.dispatchEvent(devicemotionEvent);
-      };
+      // $scope.stop = function() {
+      //  var devicemotionEvent = new CustomEvent('devicemotion', {
+      //    'detail' : {
+      //      userAccelerationX: 1.0,
+      //      userAccelerationY: 2.0,
+      //      userAccelerationZ: 3.0
+      //    }
+      //  });
+      //  //window.dispatchEvent(devicemotionEvent);
+      //  var url = 'http://195.225.105.124/orion/server/crossDomainOrionCB.php';//'http://130.206.125.182:1026/v1/updateContext';
+      //  var orionData = {
+      //    "contextElements": [
+      //      {
+      //        "type": "robot",
+      //        "isPattern": "false",
+      //        "id": "jakob",
+      //        "attributes": [
+      //          {
+      //            "name": "hest",
+      //            "type": "float",
+      //            "value": "37.90"
+      //          },
+      //          {
+      //            "name": "fullname",
+      //            "type": "string",
+      //            "value": "Jakob Engelbrecht Olesen"
+      //          }
+      //        ]
+      //      }
+      //    ],
+      //    "updateAction": "UPDATE"
+      //  };
+      //  var data = {
+      //    "data": JSON.stringify(orionData),
+      //    "ocbIP": "130.206.125.182",
+      //    "ocbPort": 1026
+      //  };
+      //  $http.post(url, data, {
+      //    timeout: 5000
+      //  }).then(function successCallback(response) {
+      //      alert('Succes: ' + response);
+      //  },
+      //  function errorCallback(response) {
+      //      alert('error: ' + response);
+      //  });
+      //
+      // };
 
       function detectCollisionsChange() {
         if ($scope.collisionSettings.detectCollisions) {
@@ -85,8 +118,11 @@
       }
 
       function onCollision(collision) {
-        robot.stop();
-        robot.turnByDegrees(180);
+        if (collision.type === 'wheels') {
+          robot.stop();
+          //robot.turnByDegrees(180);
+          //alert('stop! wheels collision...');
+        }
         setTimeout(function() {
           $scope.$apply(function () {
             $scope.collision.direction = 'stop';
@@ -115,13 +151,9 @@
     }
 
     function onTraveldata(traveldata) {
-      var lastDrive = traveldata.lastDrive,
-      dataToUpload;
-      if (lastDrive) {
-        dataToUpload = [lastDrive.time, lastDrive.speed, lastDrive.start];
-        console.log(dataToUpload);
-        //uploadData(dataToUpload);
-      }
+      var dataToUpload = [traveldata.time, traveldata.speed, traveldata.start];
+      console.log(dataToUpload);
+      //uploadData(dataToUpload);
     }
   }
 
