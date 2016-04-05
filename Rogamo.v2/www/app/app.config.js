@@ -55,6 +55,16 @@
                 }
             }
         })
+        .state('tab.pong', {
+            url: '/pong',
+            views: {
+                'tab-dash': {
+                    templateUrl: 'app/games/pong.html',
+                    controller: 'PongGameController',
+                    controllerAs: 'vm'
+                }
+            }
+        })
 
         .state('tab.acc', {
             url: '/acc',

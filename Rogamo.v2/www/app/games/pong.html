@@ -1,0 +1,149 @@
+<ion-view view-title="Pong">
+    <ion-content padding="true" scroll="false">
+      <div class="row">
+        <div class="col col-50">
+          <div class="list card">
+              <div class="item item-divider">Antal spillere: {{vm.numberOfPlayers.value}}</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          {{vm.numberOfPlayers.min}}
+                          <input type="range" name="numberOfPlayers" ng-model="vm.numberOfPlayers.value" min="{{vm.numberOfPlayers.min}}" max="{{vm.numberOfPlayers.max}}" step="1">
+                          {{vm.numberOfPlayers.max}}
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Max fart: {{vm.maxSpeed.value * 100}}</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          <i class="icon ion-ios-speedometer-outline balanced"></i>
+                          <input type="range" name="speed" ng-model="vm.maxSpeed.value" min="{{vm.maxSpeed.min}}" max="{{vm.maxSpeed.max}}" step="0.1">
+                          <i class="icon ion-ios-speedometer assertive"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Max drejevinkel: {{vm.maxTurn.value * 100}}</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          <i class="icon ion-ios-loop-strong balanced"></i>
+                          <input type="range" ng-model="vm.maxTurn.value" min="{{vm.maxTurn.min}}" max="{{vm.maxTurn.max}}" step="0.1">
+                          <i class="icon ion-ios-loop-strong assertive"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Ventetid efter skub: {{vm.pushWait.value | number: 1}} sekunder</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          {{vm.pushWait.min}}s
+                          <input type="range" name="pushWait" ng-model="vm.pushWait.value" min="{{vm.pushWait.min}}" max="{{vm.pushWait.max}}" step="0.5">
+                          {{vm.pushWait.max}}s
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Antal point for at vinde: {{vm.numberOfPointsToWin.value}}</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          {{vm.numberOfPointsToWin.min}}
+                          <input type="range" name="numberOfPointsToWin" ng-model="vm.numberOfPointsToWin.value" min="{{vm.numberOfPointsToWin.min}}" max="{{vm.numberOfPointsToWin.max}}" step="1">
+                          {{vm.numberOfPointsToWin.max}}
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="col col-50">
+          <div class="list card">
+              <div class="item item-divider">Spilleområde: {{vm.range.value | number: 1}}m</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          {{vm.range.min}}m
+                          <input type="range" name="range" ng-model="vm.range.value" min="{{vm.range.min}}" max="{{vm.range.max}}" step="0.5">
+                          {{vm.range.max}}m
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Push distance: {{vm.pushRange.value | number: 1}}m</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          {{vm.pushRange.min}}m
+                          <input type="range" name="pushRange" ng-model="vm.pushRange.value" min="{{vm.pushRange.min}}" max="{{vm.pushRange.max}}" step="0.5">
+                          {{vm.pushRange.max}}m
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="list card">
+              <div class="item item-divider">Min vende-rotation: {{vm.minRotation.value}}°</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          <i class="icon ion-refresh balanced"></i>
+                          <input type="range" name="minRotation" ng-model="vm.minRotation.value" min="{{vm.minRotation.min}}" max="{{vm.minRotation.max}}" step="15">
+                          <i class="icon ion-refresh assertive"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="item item-divider">
+            Settings
+          </div>
+          <ion-toggle ng-model="vm.debug">
+            Debug
+          </ion-toggle>
+          <div class="item item-body">
+            <button class="button button-outline icon-left ion-chevron-up" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="vm.retractKickstands()">Retract kickstands</button>
+            <button class="button button-outline icon-left ion-chevron-down" style="display: block; width: 190px;" ng-click="vm.deployKickstands()">Deploy kickstands</button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="col">
+          <div class="list card">
+              <div class="item item-divider">Minimum skub: {{vm.minForce}} | Maksimum skub: {{vm.maxForce}}</div>
+              <div class="item item-body">
+                  <div>
+                      <div class="range">
+                          <i class="icon ion-android-hand balanced"></i>
+                          <input type="range" name="minForce" ng-model="vm.minForce" min="1" max="2.9" step="0.1">
+                          <input type="range" name="maxForce" ng-model="vm.maxForce" min="4" max="8" step="0.1">
+                          <i class="icon ion-android-hand assertive"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div> -->
+      <div style="text-align: center; position: absolute; bottom: 30px; left: 0; width: 100%;"><button class="button button-huge icon ion-play" ng-click="vm.startGame()"></button></div>
+      <div id="gameContainer" ng-show="vm.gameStarted" class="ng-hide fade" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 99; text-align: center" ng-style="vm.containerStyle">
+          <!-- <canvas id="canvas" style="position: absolute; left: 190px; top: 200px; border: 0px solid blue;" width="400" height="400"></canvas> -->
+          <img ng-src="{{vm.successImage}}" onLoad="successImageLoaded(this);" style="background-color: white; border: 10px solid #aaa; border-radius: 30px; width: 95%; position: absolute; top: -150px; bottom: 0; left: 0; right: 0; margin: auto auto" class="ng-hide fade" ng-show="vm.successImage != '#'" />
+          <div style="text-align: center; position: absolute; bottom: 255px; width: 100%;" ng-show="vm.winner != undefined" class="ng-hide">
+            <div style="font-size: 40px; font-weight: bold; margin-bottom: 10px;">{{vm.winner.name}}</div>
+            <div style="font-size: 20px; font-style: italic;">{{vm.winner.points}} point</div>
+          </div>
+          <div id="pongOutput" style="font-size: 30px; line-height: 30px; position: absolute; text-align: center; width: 90%; left: 0; right: 0; margin: 20px auto; border: 1px dotted #333; padding: 20px;">output</div>
+          <div style="text-align: center; position: absolute; top: 400px; width: 100%; font-size: 500px;"ng-show="vm.secondsToGameStart > 0" class="ng-hide fade">{{vm.secondsToGameStart}}</div>
+          <div style="text-align: center; position: absolute; bottom: 30px; width: 100%;"><button class="button button-huge icon ion-stop" ng-click="vm.stopGame()"></button></div>
+          <!-- <div style="text-align: center; position: absolute; top: 20px; width: 100%;">
+              <div style="font-size: 22px">Collision suspended for {{model.nextCollision | number: 2}}</div>
+              <div>Type: {{collision.type}}</div>
+          </div> -->
+      </div>
+    </ion-content>
+</ion-view>
