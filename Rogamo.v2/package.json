@@ -30,7 +30,8 @@
       "locator": "https://github.com/jakobe/cordova-plugin-device-motion.git",
       "id": "cordova-plugin-device-motion"
     },
-    "cordova-plugin-wkwebview-engine"
+    "cordova-plugin-wkwebview-engine",
+    "cordova-plugin-device-orientation"
   ],
   "cordovaPlatforms": [
     {
