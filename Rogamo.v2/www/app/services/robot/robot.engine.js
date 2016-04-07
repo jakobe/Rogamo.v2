@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('RobotEngine', RobotEngine);
 
-    RobotEngine.$inject = ['$cordovaRobot'];
+    RobotEngine.$inject = ['$cordovaRobot' ,'$q'];
 
-    function RobotEngine(robot) {
+    function RobotEngine(robot, $q) {
       var robot = robot,
           collisionListeners = [],
           accelerometerWatchID = null,
@@ -133,10 +133,24 @@
       }
 
       function _getCompassHeading(compassSuccess, compassError) {
+        var deferred;
+        if (compassSuccess === undefined) {
+          console.log('_getCompassHeading => use Promises.');
+          deferred = $q.defer();
+          compassSuccess = function(heading) {
+            deferred.resolve(heading);
+          }
+          compassError = function(error) {
+            deferred.reject(error);
+          }
+        }
         if (navigator.compass) {
           navigator.compass.getCurrentHeading(compassSuccess, compassError);
         } else {
           compassError({code: 0, text: 'compass not supported'});
+        }
+        if (deferred) {
+          return deferred.promise;
         }
       }
 
