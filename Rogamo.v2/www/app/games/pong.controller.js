@@ -43,9 +43,9 @@
         max: 180
       };
       vm.pushWait = {
-        value: 1.5,
+        value: 4,
         min: 0,
-        max: 5
+        max: 10
       };
       vm.numberOfPointsToWin = {
         value: 5,
@@ -96,9 +96,7 @@
       }
 
       function _showImage(imagePath) {
-        $scope.$apply(function () {
-          vm.successImage = imagePath;
-        });
+        vm.successImage = imagePath;
       }
 
       function _successImageLoaded(img) {
@@ -109,19 +107,19 @@
       }
 
       function _startDrive() {
-        $scope.$apply(function () {
+        //$scope.$apply(function () {
           if (vm.containerStyle['data-background-color-orig'] != undefined) {
             vm.containerStyle['background-color'] = vm.containerStyle['data-background-color-orig'];
             delete vm.containerStyle['data-background-color-orig'];
           }
-        });
+        //});
       }
 
       function _gameOver(success, winner) {
         if (success) {
-          $scope.$apply(function () {
+          //$scope.$apply(function () {
             vm.winner = winner;
-          });
+          //});
           /*$timeout(function() {
             alert('Tillykke! \'' + winner.name + '\' har vundet med ' + winner.points + ' point.');
             delete vm.winner;
@@ -129,9 +127,9 @@
           }, 500)*/
         } else {
           alert('Spillet er slut.');
-          $scope.$apply(function () {
+          //$scope.$apply(function () {
             stopGame();
-          });
+          //});
         }
       }
 

@@ -4,9 +4,9 @@
     angular.module('app.core')
     .factory('PongGame', PongGame);
 
-    PongGame.$inject = ['RobotEngine', 'audioService'];
+    PongGame.$inject = ['RobotEngine', 'audioService', '$q', '$timeout'];
 
-    function PongGame(robot, audioService) {
+    function PongGame(robot, audioService, $q, $timeout) {
       var settings,
           totalPointsToWin = 5,
           handlers = {},
@@ -23,21 +23,42 @@
           soundFiles = [
               { id: 'success', path: 'audio/109663__grunz__success_low.wav' },
               { id: 'ding', path: 'audio/Speech On.wav' },
-              { id: 'gameover', path: 'audio/82248__robinhood76__01299-smashing-egg-1.wav' },
-              { id: 'cheering', path: 'audio/pong/bernie_cheeringcrowd_337000__corsica-s__cheer-01.wav' },
+              { id: 'gameover', path: 'audio/pong/fail_106727__kantouth__CARTOON_BING_LOW.wav' },
+              { id: 'cheering', path: 'audio/pong/actors_166434__ultradust__concert-applause-1.mp3' },// 'audio/pong/bernie_cheeringcrowd_337000__corsica-s__cheer-01.wav' },
           ],
           playerSounds = [
-            { id: 'Asta', path: 'audio/pong/players/asta2.mp3' },
-            { id: 'Erik', path: 'audio/pong/players/erik3.mp3' },
-            { id: 'Helle', path: 'audio/pong/players/helle3.mp3' },
-            { id: 'Tove', path: 'audio/pong/players/tove3.mp3' },
+            { id: 'Asta', path: 'audio/pong/players/Asta p.mp3' },
+            { id: 'Erik', path: 'audio/pong/players/Erik p.mp3' },
+            { id: 'Helle', path: 'audio/pong/players/Helle p.mp3' },
+            { id: 'Tove', path: 'audio/pong/players/tove p.mp3' },
+          ],
+          pointSounds = [
+            { id: '1point', path: 'audio/pong/points/1p.mp3' },
+            { id: '2point', path: 'audio/pong/points/2p.mp3' },
+            { id: '3point', path: 'audio/pong/points/3p.mp3' },
+            { id: '4point', path: 'audio/pong/points/4p.mp3' },
+            { id: '5point', path: 'audio/pong/points/5p.mp3' },
+          ],
+          questionSounds = [
+            { id: 'question1', path: 'audio/pong/questions/qbørn.mp3' },
+            { id: 'question2', path: 'audio/pong/questions/qefternavn.mp3' },
+            { id: 'question3', path: 'audio/pong/questions/qfar.mp3' },
+            { id: 'question4', path: 'audio/pong/questions/qfødt.mp3' },
+            { id: 'question5', path: 'audio/pong/questions/qidræt.mp3' },
+            { id: 'question6', path: 'audio/pong/questions/qlakrids.mp3' },
+            { id: 'question7', path: 'audio/pong/questions/qmor.mp3' },
+            { id: 'question8', path: 'audio/pong/questions/qmorgenmad.mp3' },
+            { id: 'question9', path: 'audio/pong/questions/qmusik.mp3' },
+            { id: 'question10', path: 'audio/pong/questions/qskole.mp3' },
+            { id: 'question11', path: 'audio/pong/questions/qsøskende.mp3' },
+            { id: 'question12', path: 'audio/pong/questions/qyndlingsfarve.mp3' },
           ],
           soundAndImageFiles = [
               //{ id: 'ID', path: 'audio/pong/', imagePath: 'img/pong/' },
               { id: 'accordion', path: 'audio/pong/accordion_looperman-l-1564425-0090033-rasputin1963-accordion-brisk-polka.mp3', imagePath: 'img/pong/accordion_PolkaBob2.jpg' },
-              { id: 'actors', path: 'audio/pong/actors_166434__ultradust__concert-applause-1.mp3', imagePath: 'img/pong/actors.jpg' },
+              //{ id: 'actors', path: 'audio/pong/actors_166434__ultradust__concert-applause-1.mp3', imagePath: 'img/pong/actors.jpg' },
               { id: 'bus', path: 'audio/pong/bus_178402__genel__honk2.mp3', imagePath: 'img/pong/bus_robert82-outback-coach-1460516-1280x960.jpg' },
-              { id: 'clarinet', path: 'audio/pong/clarinet_looperman-l-0747210-0094261-ferryterry-145-bpm-clarinet.mp3', imagePath: 'img/pong/clarinet.jpg' },
+              { id: 'clarinet', path: 'audio/pong/clarinet_looperman-l-0747210-0094261-ferryterry-145-bpm-clarinet_shorter.mp3', imagePath: 'img/pong/clarinet.jpg' },
               { id: 'clown', path: 'audio/pong/clown_151827__corsica-s__circus-freak.mp3', imagePath: 'img/pong/clown-2-1482827.jpg' },
               { id: 'drums', path: 'audio/pong/drums_looperman-l-1414881-0085534-epicrecord-jazz-kit-calm-and-steady.mp3', imagePath: 'img/pong/drums-11505.jpg' },
               { id: 'flute', path: 'audio/pong/flute_looperman-l-0731079-0053337-oscarkesh-classical-flute-130bpm.mp3', imagePath: 'img/pong/flute-post-11004-0-24348900-1385696337.jpg' },
@@ -57,10 +78,12 @@
           ],
           soundAndImageFilesRandomQueue = [],
           lastPlayedSoundAndImage,
-          timeoutID,
+          soundsPlaying = {},
+          timeoutPromise,
           robotDriving = false,
           startHeading = 0,
-          players = [];
+          players = [],
+          debugOutput = document.getElementById('pongOutput');
 
       _preloadSounds();
 
@@ -98,33 +121,31 @@
             points: 0
           };
         }
-        robot.getCompassHeading(function setStartHeading(heading) {
-          startHeading = heading.magneticHeading;
-        });
+        robot.getCompassHeading().then(_setStartHeading);
         robot.retractKickstands();
-        document.getElementById('pongOutput').style.display = gameSettings.debug ? 'block' : 'none';
+        debugOutput.style.display = settings.debug ? 'block' : 'none';
       }
 
       function play() {
         audioService.loop(backgroundSound.id);
-        robot.watchTravelData(_onTraveldata);
         collisionWatchID = robot.watchCollision(_onCollision);
-        _startDrive();
+        _randomRotate(-180, 180).then(_startDrive);
       }
 
       function stop() {
           robotDriving = false;
           robot.stop();
-          robot.clearWatchTravelData(_onTraveldata);
           robot.clearWatchCollision(collisionWatchID);
-          clearTimeout(timeoutID);
-          audioService.stop(backgroundSound.id);
-          // setTimeout(function () {
-          //   robot.deployKickstands();
-          // }, 2000);
+          $timeout.cancel(timeoutPromise);
+          _stopAllSounds();
+          //$timeout(robot.deployKickstands, 2000);
       }
 
       /////////////////////
+
+      function _setStartHeading(heading) {
+        startHeading = heading.magneticHeading;
+      }
 
       function _startDrive() {
         var randomTurn = _getRandomArbitrary(-settings.maxTurn, settings.maxTurn);
@@ -132,7 +153,7 @@
         robotDriving = true;
         _handleEvent(events.startDrive);
         robot.drive(settings.maxSpeed, randomTurn, settings.maxOuterRangeInCm, _onDriveEnd);
-        document.getElementById('pongOutput').innerHTML = 'drive: ' + settings.maxSpeed + ', rangeInCm: ' + (settings.maxOuterRangeInCm) + '<br/>turn: ' + randomTurn;
+        _debug('drive: ' + settings.maxSpeed + ', rangeInCm: ' + (settings.maxOuterRangeInCm) + '<br/>turn: ' + randomTurn);
       }
 
       function _onDriveEnd() {
@@ -141,69 +162,188 @@
         _handleEvent(events.gameOver, false);
       }
 
+      function _gameOver(winner) {
+        stop();
+        _driveAway().then(function() {
+          _handleEvent(events.showImage, 'img/pong/Transparent_Gold_Cup_Trophy_PNG_Picture.png');
+          audioService.play('cheering');
+          robot.drive(0, 1);
+          timeoutPromise = $timeout(function(){
+            robot.stop();
+          }, 11000);
+          _handleEvent(events.gameOver, true, winner);
+        });
+      }
+
       function _onCollision(collision) {
         console.log('Collision...');
-        document.getElementById('pongOutput').innerHTML += '<br/>Collision! Type: ' + collision.type + ' - Robot Driving: ' + robotDriving;
+        _debugAppend('<br/>Collision! Type: ' + collision.type + ' - Robot Driving: ' + robotDriving);
 
         //if (collision.type === 'tablet' && Math.abs(collision.force) > maxForce) {
         if (collision.type === 'wheels' && robotDriving) {
           robotDriving = false;
-          robot.getCompassHeading(_onCompassHeading);
-          _handleEvent(events.robotPush, collision);
           robot.stop();
+          robot.getCompassHeading().then(_getPlayerFromOrientation).then(_handlePushFromPlayer);
+          _handleEvent(events.robotPush, collision);
           audioService.play('ding');
-          timeoutID = setTimeout(function() {
-            var randomDegrees = _getRandomInt(settings.minRotationInDegrees, 180);
-            if (_getRandomInt(0, 1) === 0) {
-              randomDegrees = -randomDegrees;
-            }
-            console.log('drive back: ' + (-settings.maxSpeed) + ', rangeInCm: ' + (settings.pushRangeInCm));
-            document.getElementById('pongOutput').innerHTML = 'drive back: ' + (-settings.maxSpeed) + ', rangeInCm: ' + (settings.pushRangeInCm) + '<br/>Then turnByDegrees: ' + randomDegrees;
-            _playAudioVisual();
-            robot.drive(-settings.maxSpeed, 0.0, (settings.pushRangeInCm), function(traveldata) {
-              //audioService.play('success');
-              console.log('turnByDegrees: ' + randomDegrees);
-              document.getElementById('pongOutput').innerHTML = 'Drive back done.<br/>Now turnByDegrees: ' + randomDegrees;
-              robot.turnByDegrees(randomDegrees);
-              timeoutID = setTimeout(function() {
-                //audioService.play('success');
-                _startDrive();
-              }, 3000);
-            });
-          }, settings.pushWaitInMs);
         }
       }
 
-      function _onCompassHeading(heading) {
+      function _handlePushFromPlayer(currentPlayer) {
+        currentPlayer.points++;
+        _debugAppend('<br/><br/>Points: ' + currentPlayer.points);
+        var announceWait = timeoutPromise = $timeout(function() {
+          return currentPlayer;
+        }, 500);
+        announceWait.then(_playPlayerName).then(_playCurrentPoints).then(function() {
+          if (currentPlayer.points >= totalPointsToWin) {
+            _gameOver(currentPlayer);
+            return;
+          }
+          var questionWait = timeoutPromise = $timeout(function() {
+            return currentPlayer;
+          }, 1000);
+          questionWait.then(_playQuestion).then(function() {
+            return timeoutPromise = $timeout(settings.pushWaitInMs);
+          }).then(function() {
+            _playAudioVisual();
+            _driveAway().then(_randomRotate).then(_startDrive);
+          });
+        });
+      }
+
+      function _randomRotate(min, max) {
+        var deferred = $q.defer();
+        var randomDegrees = (isNaN(min) || isNaN(max))
+                            ? _getRandomAngleInDegrees()
+                            : _getRandomInt(min, max);
+        console.log('turnByDegrees: ' + randomDegrees);
+        _debugAppend('<br/>Now turnByDegrees: ' + randomDegrees);
+        robot.turnByDegrees(randomDegrees);
+        var rotateWait = timeoutPromise = $timeout(3000);
+        rotateWait.then(function() {
+          //audioService.play('success');
+          _debugAppend('Rotate done.');
+          deferred.resolve();
+        });
+        return deferred.promise;
+      }
+
+      function _getRandomAngleInDegrees() {
+        var randomDegrees = _getRandomInt(settings.minRotationInDegrees, 180);
+        if (_getRandomInt(0, 1) === 0) {
+          randomDegrees = -randomDegrees;
+        }
+        return randomDegrees;
+      }
+
+      function _driveAway() {
+        var deferred = $q.defer();
+        console.log('drive back: ' + (-settings.maxSpeed) + ', rangeInCm: ' + (settings.pushRangeInCm));
+        _debug('drive back: ' + (-settings.maxSpeed) + ', rangeInCm: ' + (settings.pushRangeInCm));
+        robot.drive(-settings.maxSpeed, 0.0, settings.pushRangeInCm, function(traveldata) {
+          //audioService.play('success');
+          _debug('Drive back done.');
+          _debugAppend('<br/><br/>Range: ' + traveldata.range);
+          deferred.resolve();
+        });
+        return deferred.promise;
+      }
+
+      function _getPlayerFromOrientation(compassHeading) {
         var sliceSize = 360 / settings.numberOfPlayers;
-        var relativeHeading = (heading.magneticHeading - startHeading + 360) % 360;
+        var relativeHeading = (compassHeading.magneticHeading - startHeading + 360) % 360;
         var playerAngle = (relativeHeading + (sliceSize / 2)) % 360;
         var facingPlayerNo = Math.floor(playerAngle / sliceSize);
         console.log('sliceSize: ' + sliceSize + ', relativeHeading: ' + relativeHeading + ', playerAngle: ' + playerAngle + ', facingPlayerNo: ' + facingPlayerNo);
         var currentPlayer = players[facingPlayerNo];
-        currentPlayer.points++;
-        console.log('Playing sound: ' + currentPlayer.successSoundId);
-        setTimeout(function() {
-          audioService.play(currentPlayer.successSoundId);
-        }, 500);
 
-        document.getElementById('pongOutput').innerHTML += '<br/><br/>Start heading: ' + startHeading;
-        document.getElementById('pongOutput').innerHTML += '<br/>Heading: ' + heading.magneticHeading;
-        document.getElementById('pongOutput').innerHTML += '<br/>relativeHeading: ' + relativeHeading;
-        document.getElementById('pongOutput').innerHTML += '<br/>playerAngle: ' + playerAngle;
-        document.getElementById('pongOutput').innerHTML += '<br/><br/>Facing player no:';
-        document.getElementById('pongOutput').innerHTML += '<div style="font-size: 150px; margin-top: 50px;">' + (facingPlayerNo+1) + '</div>';
-        document.getElementById('pongOutput').innerHTML += '<br/><br/>Points: ' + currentPlayer.points;
+        _debugAppend('<br/><br/>Start heading: ' + startHeading);
+        _debugAppend('<br/>Heading: ' + compassHeading.magneticHeading);
+        _debugAppend('<br/>relativeHeading: ' + relativeHeading);
+        _debugAppend('<br/>playerAngle: ' + playerAngle);
+        _debugAppend('<br/><br/>Facing player no:');
+        _debugAppend('<div style="font-size: 150px; margin-top: 50px;">' + (facingPlayerNo+1) + '</div>');
 
-        if (currentPlayer.points >= totalPointsToWin) {
-          stop();
-          _handleEvent(events.showImage, 'img/pong/Transparent_Gold_Cup_Trophy_PNG_Picture.png');
-          setTimeout(function() {
-            audioService.play('cheering');
-            _handleEvent(events.gameOver, true, currentPlayer);
-          }, 1000);
+        return currentPlayer;
+      }
+
+      function _playSound(soundId) {
+        var deferred = $q.defer();
+        soundsPlaying[soundId] = soundId;
+        audioService.play(soundId, null, null, function() {
+          delete soundsPlaying[soundId];
+          deferred.resolve();
+        });
+        return deferred.promise;
+      }
+
+
+      function _stopAllSounds() {
+        audioService.stop(backgroundSound.id);
+        for(var key in soundsPlaying) {
+            var soundId = soundsPlaying[key];
+            console.log('Stopping sound: ' + soundId);
+            audioService.stop(soundId,
+              function success() {},
+              function error(msg) {
+                console.log('Error stopping sound: ' + msg); }
+            );
+            delete soundsPlaying[key];
         }
+      }
 
+      function _playPlayerName(player) {
+        var deferred = $q.defer();
+        _playSound(player.successSoundId).then(function() {
+          deferred.resolve(player);
+        });
+        return deferred.promise;
+      }
+
+      function _playCurrentPoints(player) {
+        var deferred = $q.defer();
+        var pointSound = pointSounds.length >= player.points
+                         ? pointSounds[player.points - 1]
+                         : null;
+        if (pointSound) {
+          _playSound(pointSound.id).then(function() {
+            deferred.resolve(player);
+          });
+        } else {
+          deferred.resolve(player);
+        }
+        return deferred.promise;
+      }
+
+      function _playQuestion(player) {
+        var deferred = $q.defer();
+        var randomQuestion = _selectRandomQuestion(player);
+        console.log('Playing question: ' + randomQuestion.id);
+        _playSound(randomQuestion.id).then(function() {
+          deferred.resolve(player);
+        });
+        return deferred.promise;
+      }
+
+      function _selectRandomQuestion(player) {
+        var questionQueue = player.questionsRandomQueue;
+        if (questionQueue === undefined || questionQueue.length === 0) {
+          questionQueue = player.questionsRandomQueue = questionSounds.slice();
+          _shuffleArray(questionQueue);
+          //Make sure last played sound and image is not the same as the next:
+          if (player.lastPlayedQuestion != undefined && player.lastPlayedQuestion === questionQueue[questionQueue.length - 1]) {
+            questionQueue.unshift(questionQueue.pop());
+          }
+        }
+        return player.lastPlayedQuestion = questionQueue.pop();
+      }
+
+      function _playAudioVisual() {
+        var soundAndImage = _selectRandomSoundAndImage();
+        console.log('Playing/showing: ' + soundAndImage.id);
+        audioService.play(soundAndImage.id);
+        _handleEvent(events.showImage, soundAndImage.imagePath);
       }
 
       function _selectRandomSoundAndImage() {
@@ -235,20 +375,6 @@
         return array;
       }
 
-      function _playAudioVisual() {
-        var soundAndImage = _selectRandomSoundAndImage();
-        console.log('Playing/showing: ' + soundAndImage.id);
-        audioService.play(soundAndImage.id);
-        _handleEvent(events.showImage, soundAndImage.imagePath);
-      }
-
-      function _onTraveldata(traveldata) {
-        //console.log('range: ' + traveldata.range + ', maxOuterRangeInCm: ' + settings.maxOuterRangeInCm);
-        //   if (traveldata.range >= settings.maxOuterRangeInCm) {
-        //     stop();
-        //   }
-      }
-
       function _handleEvent(eventName) {
         var handler = handlers[eventName];
         if (handler && typeof handler === "function") {
@@ -266,7 +392,7 @@
       }
 
       function _preloadSounds() {
-        var allSounds = soundFiles.concat(soundAndImageFiles, playerSounds);
+        var allSounds = soundFiles.concat(soundAndImageFiles, playerSounds, pointSounds, questionSounds);
         for (var i = 0, length = allSounds.length; i < length; i++) {
             var sound = allSounds[i];
             audioService.preloadSimple(sound.id, sound.path);
@@ -279,6 +405,19 @@
             function (msg) {
                 console.log('Error loading complex sound: ' + msg);
         });
+      }
+
+      function _debug(message, append) {
+        if (settings.debug) {
+          if (append) {
+            message = debugOutput.innerHTML + message;
+          }
+          debugOutput.innerHTML = message;
+        }
+      }
+
+      function _debugAppend(message) {
+        _debug(message, true);
       }
     };
 
