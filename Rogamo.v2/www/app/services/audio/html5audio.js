@@ -29,9 +29,12 @@
               this.res_cache[ id ] = res;
           },
 
-          play: function(id, success, fail) {
+          play: function(id, success, fail, complete) {
               var res = this.res_cache[ id ];
               if(typeof res === 'object') {
+                  if(typeof complete === "function") {
+                    res.addEventListener('ended', complete, false);
+                  }
                   res.play();
                   if(typeof success === 'function') success();
               } else {
