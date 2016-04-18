@@ -10,7 +10,6 @@
   <content src="index.html"/>
   <access origin="*"/>
   <vs:features></vs:features>
-  <preference name="SplashScreenDelay" value="3000"/>
   <preference name="windows-target-version" value="8.1"/>
   <preference name="windows-phone-target-version" value="8.1"/>
   <preference name="Orientation" value="default"/>
@@ -57,6 +56,7 @@
     <preference name="SplashScreenHeight" value="1024" />
     <preference name="AutoHideSplashScreen" value="false" />
   </platform>
+  <icon src="resources/ios/icon/icon-small@3x.png"/>
   <plugin name="cordova-plugin-device" version="1.1.1"/>
   <plugin name="cordova-plugin-device-motion" spec="https://github.com/jakobe/cordova-plugin-device-motion.git"/>
   <plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6"/>
