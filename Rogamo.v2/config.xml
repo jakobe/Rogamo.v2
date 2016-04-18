@@ -1,56 +1,56 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget defaultlocale="en-US" id="io.cordova.myappe2785d518e9f4f6ea03055878dd7a400" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">
-    <name>Rogamo.v2</name>
-    <description>A blank project that uses Apache Cordova to help you build an app that targets multiple mobile platforms: Android, iOS, Windows, and Windows Phone.</description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">Apache Cordova Team </author>
-    <content src="index.html" />
-    <access origin="*" />
-    <vs:features />
-    <preference name="SplashScreen" value="screen" />
-    <preference name="windows-target-version" value="8.1" />
-    <preference name="windows-phone-target-version" value="8.1" />
-    <preference name="Orientation" value="default" />
-    <preference name="KeepRunning" value="True" />
-    <preference name="ShowTitle" value="True" />
-    <preference name="InAppBrowserStorageEnabled" value="True" />
-    <preference name="SuppressesIncrementalRendering" value="True" />
-    <preference name="BackupWebStorage" value="none" />
-    <preference name="deployment-target" value="9.0" />
-    <platform name="ios">
-        <icon height="57" src="resources\ios\icon\icon.png" width="57" />
-        <icon height="114" src="resources\ios\icon\icon@2x.png" width="114" />
-        <icon height="40" src="resources\ios\icon\icon-40.png" width="40" />
-        <icon height="80" src="resources\ios\icon\icon-40@2x.png" width="80" />
-        <icon height="50" src="resources\ios\icon\icon-50.png" width="50" />
-        <icon height="100" src="resources\ios\icon\icon-50@2x.png" width="100" />
-        <icon height="60" src="resources\ios\icon\icon-60.png" width="60" />
-        <icon height="120" src="resources\ios\icon\icon-60@2x.png" width="120" />
-        <icon height="72" src="resources\ios\icon\icon-72.png" width="72" />
-        <icon height="76" src="resources\ios\icon\icon-76.png" width="76" />
-        <icon height="29" src="resources\ios\icon\icon-small.png" width="29" />
-        <icon height="58" src="resources\ios\icon\icon-small@2x.png" width="58" />
-        <icon height="87" src="resources\ios\icon\icon-small@3x.png" width="87" />
-    </platform>
-    <platform name="ios">
-        <splash height="480" src="res/screens/ios/screen-iphone-portrait.png" width="320" />
-        <splash height="960" src="res/screens/ios/screen-iphone-portrait-2x.png" width="640" />
-        <splash height="1024" src="res/screens/ios/screen-ipad-portrait.png" width="768" />
-        <splash height="2048" src="res/screens/ios/screen-ipad-portrait-2x.png" width="1536" />
-        <splash height="768" src="res/screens/ios/screen-ipad-landscape.png" width="1024" />
-        <splash height="1536" src="res/screens/ios/screen-ipad-landscape-2x.png" width="2048" />
-        <splash height="1136" src="res/screens/ios/screen-iphone-568h-2x.png" width="640" />
-        <splash height="1334" src="res/screens/ios/screen-iphone-portrait-667h.png" width="750" />
-        <splash height="2208" src="res/screens/ios/screen-iphone-portrait-736h.png" width="1242" />
-        <splash height="1242" src="res/screens/ios/screen-iphone-landscape-736h.png" width="2208" />
-    </platform>
-    <icon src="resources\ios\icon\icon-small@3x.png" />
-    <plugin name="cordova-plugin-device" version="1.1.1" />
-    <plugin name="cordova-plugin-device-motion" spec="https://github.com/jakobe/cordova-plugin-device-motion.git" />
-    <plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6" />
-    <plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.3.0" />
-    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.0.2" />
-    <engine name="browser" spec="~4.0.0" />
-    <engine name="ios" spec="~4.1.0" />
-    <plugin name="cordova-plugin-device-orientation" spec="~1.0.2" />
-    <plugin name="cordova-plugin-iosrtc" spec="~2.2.4" />
+  <name>Rogamo.v2</name>
+  <description>A blank project that uses Apache Cordova to help you build an app that targets multiple mobile platforms: Android, iOS, Windows, and Windows Phone.</description>
+  <author email="dev@cordova.apache.org" href="http://cordova.io">Apache Cordova Team </author>
+  <content src="index.html" />
+  <access origin="*" />
+  <vs:features />
+  <preference name="SplashScreen" value="screen" />
+  <preference name="windows-target-version" value="8.1" />
+  <preference name="windows-phone-target-version" value="8.1" />
+  <preference name="Orientation" value="default" />
+  <preference name="KeepRunning" value="True" />
+  <preference name="ShowTitle" value="True" />
+  <preference name="InAppBrowserStorageEnabled" value="True" />
+  <preference name="SuppressesIncrementalRendering" value="True" />
+  <preference name="BackupWebStorage" value="none" />
+  <preference name="deployment-target" value="9.0" />
+  <platform name="ios">
+    <icon height="57" src="resources\ios\icon\icon.png" width="57" />
+    <icon height="114" src="resources\ios\icon\icon@2x.png" width="114" />
+    <icon height="40" src="resources\ios\icon\icon-40.png" width="40" />
+    <icon height="80" src="resources\ios\icon\icon-40@2x.png" width="80" />
+    <icon height="50" src="resources\ios\icon\icon-50.png" width="50" />
+    <icon height="100" src="resources\ios\icon\icon-50@2x.png" width="100" />
+    <icon height="60" src="resources\ios\icon\icon-60.png" width="60" />
+    <icon height="120" src="resources\ios\icon\icon-60@2x.png" width="120" />
+    <icon height="72" src="resources\ios\icon\icon-72.png" width="72" />
+    <icon height="76" src="resources\ios\icon\icon-76.png" width="76" />
+    <icon height="29" src="resources\ios\icon\icon-small.png" width="29" />
+    <icon height="58" src="resources\ios\icon\icon-small@2x.png" width="58" />
+    <icon height="87" src="resources\ios\icon\icon-small@3x.png" width="87" />
+  </platform>
+  <platform name="ios">
+    <splash height="480" src="res/screens/ios/screen-iphone-portrait.png" width="320" />
+    <splash height="960" src="res/screens/ios/screen-iphone-portrait-2x.png" width="640" />
+    <splash height="1024" src="res/screens/ios/screen-ipad-portrait.png" width="768" />
+    <splash height="2048" src="res/screens/ios/screen-ipad-portrait-2x.png" width="1536" />
+    <splash height="768" src="res/screens/ios/screen-ipad-landscape.png" width="1024" />
+    <splash height="1536" src="res/screens/ios/screen-ipad-landscape-2x.png" width="2048" />
+    <splash height="1136" src="res/screens/ios/screen-iphone-568h-2x.png" width="640" />
+    <splash height="1334" src="res/screens/ios/screen-iphone-portrait-667h.png" width="750" />
+    <splash height="2208" src="res/screens/ios/screen-iphone-portrait-736h.png" width="1242" />
+    <splash height="1242" src="res/screens/ios/screen-iphone-landscape-736h.png" width="2208" />
+  </platform>
+  <icon src="resources\ios\icon\icon-small@3x.png" />
+  <plugin name="cordova-plugin-device" version="1.1.1" />
+  <plugin name="cordova-plugin-device-motion" spec="https://github.com/jakobe/cordova-plugin-device-motion.git" />
+  <plugin name="cordova-plugin-nativeaudio" src="https://github.com/SidneyS/cordova-plugin-nativeaudio.git" version="3.0.6" />
+  <plugin name="cordova-plugin-doublerobotics" src="https://github.com/jakobe/cordova-plugin-doublerobotics.git" version="0.3.0" />
+  <plugin name="cordova-plugin-wkwebview-engine" spec="~1.0.2" />
+  <engine name="browser" spec="~4.0.0" />
+  <engine name="ios" spec="~4.1.0" />
+  <plugin name="cordova-plugin-device-orientation" spec="~1.0.2" />
+  <plugin name="cordova-plugin-iosrtc" spec="~2.2.4" />
 </widget>
