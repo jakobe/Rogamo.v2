@@ -22,6 +22,43 @@
             [1, 0]
         ];
 
+        $scope.compassHeading = {
+          magneticHeading: 0,
+          startHeading: 0
+        };
+
+        $scope.setStartHeading = function() {
+          navigator.compass.getCurrentHeading(function (heading) {
+            $scope.compassHeading.startHeading = heading.magneticHeading;
+          });
+        };
+
+        watchCompass();
+
+        function watchCompass() {
+          var options = {
+              frequency: 100
+          };
+          var watchID = navigator.compass.watchHeading(compassSuccess, compassError, options);
+        }
+
+        function compassSuccess(heading) {
+            $scope.$apply(function () {
+              $scope.compassHeading.magneticHeading = heading.magneticHeading;
+              $scope.compassHeading.angle = heading.magneticHeading - $scope.compassHeading.startHeading;
+              if ($scope.compassHeading.angle < 0)
+                $scope.compassHeading.angle += 360;
+              $scope.compassHeading.userAngle = $scope.compassHeading.angle + 45;
+              if ($scope.compassHeading.userAngle >= 360)
+                $scope.compassHeading.userAngle -= 360;
+              $scope.compassHeading.player = Math.floor($scope.compassHeading.userAngle / 90);
+            });
+        };
+
+        function compassError(compassError) {
+            alert('Compass error.\nError code: ' + compassError.code + '\nError: ' + compassError.text);
+        };
+
 
         var audioPlugin = window.plugins ? window.plugins.NativeAudio : null,
             sounds = {};
@@ -66,41 +103,16 @@
 
             var labels = [];
             var data = [];
-            var driveDataToDisplay = '';
-            for (var i = 0; i < traveldata.driveData.length; i++) {
-                var entry = traveldata.driveData[i];
-                if (typeof entry.speed !== 'undefined') {
-                    var speed = entry.speed;
-                    var range = entry.range;
-                    if (speed === 0.0 && rangeWhenStopDriving === 0.0) {
-                        rangeWhenStopDriving = range;
-                    }
-                    data.push(speed);
-                    labels.push(range);
-                }
-                if (entry.stop) {
-                    driveDataToDisplay += entry.stop + '\n';
-                } else if (typeof entry.speed !== 'undefined') {
-                    driveDataToDisplay += 'speed: ' + entry.speed + ' | range: ' + entry.range + ' | ' + entry.time + '\n';
-                }
-            }
-            var lastDrive = traveldata.lastDrive,
-                            dataToUpload;
-            if (lastDrive) {
-                dataToUpload = [lastDrive.time, lastDrive.speed, lastDrive.start];
-                console.log(dataToUpload);
-                uploadData(dataToUpload);
-            }
 
-            // Handle the online event
+            var dataToUpload = [traveldata.time, traveldata.speed, traveldata.start];
+            console.log(dataToUpload);
+            //uploadData(dataToUpload);
+
             $scope.$apply(function () {
                 $scope.doubleRobotics = {
                     serial: "00-000000",
                     message: "left: " + traveldata.leftEncoderTotalCm + " | right: " + traveldata.rightEncoderTotalCm + " | max: " + maxRange + " | rangeDrivenToStop: " + rangeDrivenToStop
                 };
-                $scope.driveData = driveDataToDisplay;
-                $scope.labels = labels;
-                $scope.data = [data];
             });
         }
 
@@ -148,8 +160,10 @@
             maxRange = 0;
             rangeWhenStopDriving = 0.0;
             robot.drive(direction, turn, range,
-                function (data) {
-                    $scope.doubleRobotics = data;
+                function (traveldata) {
+                    if (range > 0) {
+                      alert('Drive Range end! Range: ' + traveldata.range);
+                    }
                 },
                 function (msg) { alert("Error! => " + msg); }
             );

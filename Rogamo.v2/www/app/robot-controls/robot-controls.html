@@ -6,6 +6,15 @@
             <button class="button button-outline icon-left ion-arrow-up-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleUp()">Pole up</button>
             <button class="button button-outline icon-left ion-stop" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleStop()">Pole stop</button>
             <button class="button button-outline icon-left ion-arrow-down-a" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="poleDown()">Pole down</button>
+            <div>
+                <button class="button button-outline icon-left ion-android-compass" style="display: block; margin-bottom: 10px; width: 190px;" ng-click="setStartHeading()">Set start heading</button>
+                <div>startHeading: <span ng-bind="compassHeading.startHeading | number: 0"></span></div>
+                <div>magneticHeading: <span ng-bind="compassHeading.magneticHeading | number: 0"></span></div>
+                <div>angle: <span ng-bind="compassHeading.angle | number: 0"></span></div>
+                <div>userAngle: <span ng-bind="compassHeading.userAngle | number: 0"></span></div>
+                <div>player: <span ng-bind="compassHeading.player"></span></div>
+                <!-- <div>timestamp: <span ng-bind="compass.heading.timestamp"></span></div> -->
+            </div>
         </div>
         <div class="drive-controls">
             <div class="row">
