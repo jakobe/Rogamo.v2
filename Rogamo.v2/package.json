@@ -31,7 +31,8 @@
       "id": "cordova-plugin-device-motion"
     },
     "cordova-plugin-wkwebview-engine",
-    "cordova-plugin-device-orientation"
+    "cordova-plugin-device-orientation",
+    "cordova-plugin-iosrtc",
   ],
   "cordovaPlatforms": [
     {

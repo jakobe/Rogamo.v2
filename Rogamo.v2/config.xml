@@ -52,4 +52,5 @@
     <engine name="browser" spec="~4.0.0" />
     <engine name="ios" spec="~4.1.0" />
     <plugin name="cordova-plugin-device-orientation" spec="~1.0.2" />
+    <plugin name="cordova-plugin-iosrtc" spec="~2.2.4" />
 </widget>
