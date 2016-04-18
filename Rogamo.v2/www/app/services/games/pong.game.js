@@ -7,7 +7,8 @@
     PongGame.$inject = ['RobotEngine', 'audioService', '$q', '$timeout'];
 
     function PongGame(robot, audioService, $q, $timeout) {
-      var settings,
+      var isInitialized = false,
+          settings,
           totalPointsToWin = 5,
           handlers = {},
           events = {
@@ -121,9 +122,13 @@
             points: 0
           };
         }
+        if (!isInitialized && settings.enablePointerDetection) {
+          _addPointerDetectionWindows(settings.inputVideo);
+        }
         robot.getCompassHeading().then(_setStartHeading);
         robot.retractKickstands();
         debugOutput.style.display = settings.debug ? 'block' : 'none';
+        isInitialized = true;
       }
 
       function play() {
@@ -183,8 +188,17 @@
         if (collision.type === 'wheels' && robotDriving) {
           robotDriving = false;
           robot.stop();
-          robot.getCompassHeading().then(_getPlayerFromOrientation).then(_handlePushFromPlayer);
-          _handleEvent(events.robotPush, collision);
+          robot.getCompassHeading().then(_getPlayerFromOrientation).then(function(player) {
+            if (settings.enablePointerDetection) {
+              var wait = timeoutPromise = $timeout(1000);
+              wait.then(_driveAway).then(_randomRotate).then(_startDrive);
+            } else {
+              _handlePushFromPlayer(player);
+            }
+          })
+          if (!settings.enablePointerDetection) {
+            _handleEvent(events.robotPush, collision);
+          }
           audioService.play('ding');
         }
       }
@@ -406,6 +420,54 @@
                 console.log('Error loading complex sound: ' + msg);
         });
       }
+
+      function _addPointerDetectionWindows(inputVideo) {
+        var videoWidth = inputVideo.videoWidth,
+        videoHeight = inputVideo.videoHeight;
+
+        var padding = 50,
+        windowWidth = videoWidth - (padding * 2),
+        windowHeight = Math.round(videoHeight * 0.6) - (padding * 2);
+
+        var upperWindow = {
+          id: 'upper',
+          width: windowWidth,
+          height: windowHeight,
+          upperRightX: padding,
+          upperRightY: padding
+        };
+
+        var lowerWindow = {
+          id: 'lower',
+          width: windowWidth,
+          height: windowHeight,
+          upperRightX: padding,
+          upperRightY: padding + windowHeight
+        };
+        robot.addPointerDetectionWindows(upperWindow, windowIn, windowOut);
+      }
+
+      function windowIn(data) {
+        if (settings.enablePointerDetection) {
+          switch (data.windowId) {
+            case "upper":
+            console.log('Pointer Detected...');
+            _debugAppend('<br/>Pointer Detected - Robot Driving: ' + robotDriving);
+            if (robotDriving) {
+              robotDriving = false;
+              robot.stop();
+              robot.getCompassHeading().then(_getPlayerFromOrientation).then(_handlePushFromPlayer);
+              audioService.play('ding');
+              _handleEvent(events.robotPush, collision);
+            }
+            break;
+          }
+        }
+      };
+
+      function windowOut(data) {
+        console.log("WindowOut event detected in window " + data.windowId);
+      };
 
       function _debug(message, append) {
         if (settings.debug) {

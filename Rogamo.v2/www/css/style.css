@@ -92,3 +92,7 @@ button.icon.flip-x:before {
       background-color: rgb(237, 225, 5);
       border-color: rgb(237, 225, 5);
 }
+
+.list.card.compact .item.item-body {
+  padding: 4px 16px;
+}

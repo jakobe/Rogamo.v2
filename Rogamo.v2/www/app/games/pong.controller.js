@@ -4,11 +4,19 @@
     angular.module('app')
     .controller('PongGameController', PongGameController);
 
-    PongGameController.$inject = ['$scope', '$timeout', '$ionicPlatform', 'PongGame', 'RobotEngine'];
+    PongGameController.$inject = ['$scope', '$timeout', '$ionicPlatform', '$ionicPopover', 'PongGame', 'RobotEngine'];
 
-    function PongGameController($scope, $timeout, $ionicPlatform, game, robot) {
+    function PongGameController($scope, $timeout, $ionicPlatform, $ionicPopover, game, robot) {
       var vm = this,
-          gameStartPromise;
+          gameStartPromise,
+          videoWidth = vm.videoWidth = 640,
+          videoHeight = videoWidth;
+
+      if (window.orientation === 0) {
+        videoWidth = Math.round(videoWidth * 0.75);
+      } else {
+        videoHeight = Math.round(videoHeight * 0.75);
+      }
 
       vm.secondsToGameStart = -1;
 
@@ -52,23 +60,91 @@
         min: 1,
         max: 10
       };
+      vm.inputVideo = {
+        videoWidth: 0,
+        videoHeight: 0
+      }
 
+      vm.enableFIWare = true;
       vm.successImage = '#';
-
       vm.debug = false;
 
       vm.containerStyle = {
         //'background-color': 'green'
       };
-
+      vm.startCalibration = startCalibration;
       vm.startGame = startGame;
       vm.stopGame = stopGame;
       vm.retractKickstands = robot.retractKickstands;
       vm.deployKickstands = robot.deployKickstands;
       window.successImageLoaded = _successImageLoaded;
+      vm.calibrate = calibrate;
+      vm.closeCalibratePopover = closeCalibratePopover;
+      vm.isPointerDetectionStarted = false;
+      vm.isCalibrated = false;
+
+      initPopover();
 
       /////////////////////////
-      function startGame() {
+      $scope.$on('$ionicView.leave', function (viewInfo, state) {
+        robot.stopPointerDetection();
+      });
+
+      function initPopover() {
+        var popoverHeight = videoHeight + 100;
+
+        var popoverTemplate = '<ion-popover-view style="height: ' + popoverHeight + 'px; width: 98%;">'+
+                      //  '  <ion-header-bar>'+
+                      //  '    <h1 class="title">Kalibrer spillefarve</h1>'+
+                      //  '  </ion-header-bar>'+
+                       '  <ion-content style="text-align: center;">'+
+                       '    <video id="videoInput" style="margin: auto; width: ' + videoWidth + 'px; height: ' + videoHeight + 'px;" autoplay poster="img/kurento-mirrored.png"></video>'+
+                       //'    <video id="videoOutput" style="margin: auto; width: 640px; height: 480px; border: 1px solid #ccc;" autoplay poster="img/kurento-mirrored.png"></video>'+
+                       '    <button style="margin: 20px 4px" class="button button-positive icon-left ion-ios-color-wand" ng-click="vm.calibrate()" ng-disabled="!vm.isPointerDetectionStarted">Kalibrer</button>'+
+                       '    <button style="margin: 20px 4px" class="button button-balanced icon-left ion-ios-close" ng-click="vm.closeCalibratePopover()">Luk</button>'+
+                       '  </ion-content>'+
+                       '</ion-popover-view>';
+        $scope.popover = $ionicPopover.fromTemplate(popoverTemplate, {
+          scope: $scope
+        });
+
+        if (window.device.platform === 'iOS') {
+          $scope.$on('popover.shown', refreshVideos);
+          $scope.$on('popover.hidden', refreshVideos);
+        };
+
+        function refreshVideos() {
+          $timeout(cordova.plugins.iosrtc.refreshVideos, 10);
+        }
+
+        $scope.$on('$destroy', function() {
+          $scope.popover.remove();
+        });
+
+      }
+
+      function startCalibration($event) {
+        $scope.popover.show($event);
+        var videoInput = document.getElementById('videoInput'),
+            videoOutput = document.getElementById('videoOutput');
+
+        var options = {
+          videoWidth: parseInt(vm.videoWidth),
+          videoFrameRate: 15,//parseInt(vm.videoFrameRate),
+          videoInput: videoInput,
+          videoOutput: videoOutput,
+          sendVideoOnly: true//vm.sendVideoOnly
+        };
+        if (!vm.isPointerDetectionStarted) {
+          robot.startPointerDetection(options)
+          .then(function(inputVideo) {
+            vm.isPointerDetectionStarted = true;
+            vm.inputVideo = inputVideo;
+          });
+        }
+      }
+
+      function startGame($event) {
         vm.containerStyle['background-color'] = 'rgb(185, 175, 255)';
         var gameSettings = _getGameSettings();
         game.init(gameSettings, _showImage, _startDrive, _gameOver, _robotPush);
@@ -141,6 +217,11 @@
         delete vm.winner;
       }
 
+
+      function closeCalibratePopover() {
+        $scope.popover.hide();
+      }
+
       function _getGameSettings() {
         var rangeInCm = parseFloat(vm.range.value) * 100,
             outerRangeFactor = 1.3,
@@ -155,8 +236,15 @@
           minRotationInDegrees: parseInt(vm.minRotation.value),
           pushWaitInMs: parseFloat(vm.pushWait.value) * 1000,
           totalPointsToWin: parseInt(vm.numberOfPointsToWin.value),
+          enablePointerDetection : vm.enableFIWare,
+          inputVideo: vm.inputVideo,
           debug: vm.debug
         };
+      }
+
+      function calibrate() {
+        robot.calibratePointerDetection();
+        vm.isCalibrated = true;
       }
 
     }
