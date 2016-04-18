@@ -49,13 +49,13 @@
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
   </platform>
   <platform name="browser">
-    <preference name="SplashScreen" value="/img/splashscreen.png" />
-    <preference name="SplashScreenDelay" value="5000" />
-    <preference name="SplashScreenBackgroundColor" value="purple" />
-    <preference name="ShowSplashScreen" value="true" />
-    <preference name="SplashScreenWidth" value="600" />
-    <preference name="SplashScreenHeight" value="1024" />
-    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="SplashScreen" value="/img/splashscreen.png"/>
+    <preference name="SplashScreenDelay" value="5000"/>
+    <preference name="SplashScreenBackgroundColor" value="purple"/>
+    <preference name="ShowSplashScreen" value="true"/>
+    <preference name="SplashScreenWidth" value="600"/>
+    <preference name="SplashScreenHeight" value="1024"/>
+    <preference name="AutoHideSplashScreen" value="false"/>
   </platform>
   <plugin name="cordova-plugin-device" version="1.1.1"/>
   <plugin name="cordova-plugin-device-motion" spec="https://github.com/jakobe/cordova-plugin-device-motion.git"/>
@@ -67,4 +67,5 @@
   <plugin name="cordova-plugin-splashscreen" spec="~3.1.0"/>
   <engine name="browser" spec="~4.0.0"/>
   <engine name="ios" spec="~4.1.0"/>
+  <icon src="resources/ios/icon/icon-small@3x.png"/>
 </widget>
