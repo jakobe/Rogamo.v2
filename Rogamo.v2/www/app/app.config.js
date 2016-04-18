@@ -84,7 +84,28 @@
                     controller: 'RobotControlsController'
                 }
             }
-        });
+        })
+
+        .state('tab.kurento', {
+            url: '/kurento',
+            views: {
+                'tab-kurento': {
+                    templateUrl: 'app/kurento/kurento.html',
+                    controller: 'KurentoController'
+                }
+            }
+        })
+
+        .state('tab.kurento-pointer', {
+            url: '/kurento-pointer',
+            views: {
+                'tab-kurento-pointer': {
+                    templateUrl: 'app/kurento/kurento-pointer.html',
+                    controller: 'KurentoPointerController',
+                    controllerAs: 'vm'
+                }
+            }
+        });;
 
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/tab/dash');

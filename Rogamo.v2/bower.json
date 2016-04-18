@@ -3,5 +3,11 @@
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4"
+  },
+  "dependencies": {
+    "adapter.js": "*",
+    "kurento-client": "master",
+    "kurento-module-pointerdetector": "master",
+    "kurento-utils": "master"
   }
 }

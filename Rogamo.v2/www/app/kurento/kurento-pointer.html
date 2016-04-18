@@ -1,0 +1,54 @@
+﻿<ion-view title="Kurento Pointer Detection">
+    <ion-content padding="true" scroll="false">
+        <div class="container">
+            <div class="row">
+                <div class="col" ng-style="{display: vm.sendVideoOnly ? 'block' : ''}">
+                    <h3>Local stream</h3>
+                    <video id="videoInput" autoplay poster="img/kurento-mirrored.png"></video>
+                </div>
+                <div class="col" ng-style="{display: vm.sendVideoOnly ? 'none' : 'block'}">
+                    <h3>Remote stream</h3>
+                    <video id="videoOutput" autoplay poster="img/kurento-mirrored.png"></video>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-67">
+                    <button class="button button-balanced icon-left ion-play" ng-click="vm.start()" ng-disabled="vm.started">Start</button>
+                    <button class="button button-energized icon-left ion-pause" ng-click="vm.pauseresume()" ng-disabled="!vm.started" ng-bind="vm.pauseResumeTitle">Pause</button>
+                    <button class="button button-assertive icon-left ion-stop" ng-click="vm.stop()" ng-disabled="!vm.started">Stop</button>
+                    <button class="button button-positive icon-left ion-social-apple" ng-click="vm.calibrate()" ng-disabled="!vm.started || vm.paused">Calibrate</button>
+                    <button class="button button-royal icon-left ion-model-s" ng-click="vm.drive()">Drive</button>
+                  </div>
+                  <div class="col">
+                    <div>
+                      Video resolution: <select ng-model="vm.videoWidth">
+                        <option value="320">320</option>
+                        <option value="640">640</option>
+                        <option value="960">960</option>
+                        <option value="1280">1280</option>
+                      </select>
+                    </div>
+                    <div>
+                      Video frame rate: <select ng-model="vm.videoFrameRate">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                      </select>
+                    </div>
+                    <div>
+                      Send video only: <input type="checkbox" ng-model="vm.sendVideoOnly" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label ng-bind="vm.inputDimensions"></label>
+                    <label ng-bind="vm.outputDimensions"></label>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

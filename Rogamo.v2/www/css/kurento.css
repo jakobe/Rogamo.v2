@@ -1,0 +1,47 @@
+video  {
+	display: block;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	width: 480px;
+	height: 360px;
+    transform: scale(-1, 1);            /*For Firefox (& IE) */
+    -webkit-transform: scale(-1, 1);     /*for Chrome & Opera (& Safari) */
+}
+
+label#inputDimensions,
+label#outputDimensions {
+	color: rgb(239, 239, 239);
+}
+
+@media screen and (orientation:portrait) {
+	ion-nav-view[name="tab-kurento"] .row:first-child .col:first-child,
+	ion-nav-view[name="tab-kurento-pointer"] .row:first-child .col:first-child,
+	ion-nav-view[name="tab-kurento"] h3,
+	ion-nav-view[name="tab-kurento-pointer"] h3 {
+		display: none;
+	}
+
+	ion-nav-view[name="tab-kurento"] video,
+	ion-nav-view[name="tab-kurento-pointer"] video {
+		width: 600px;
+		height: 800px;
+	}
+
+	label#inputDimensions {
+		color: rgb(252, 252, 252);
+	}
+}
+
+#console {
+	min-height: 120px;
+	max-height: 360px;
+}
+
+.col-md-2 {
+	width: 80px;
+	padding-top: 190px;
+}

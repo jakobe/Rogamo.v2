@@ -4,14 +4,15 @@
     angular.module('app.core')
     .factory('RobotEngine', RobotEngine);
 
-    RobotEngine.$inject = ['$cordovaRobot' ,'$q'];
+    RobotEngine.$inject = ['$cordovaRobot' ,'$q', 'PointerDetection'];
 
-    function RobotEngine(robot, $q) {
+    function RobotEngine(robot, $q, pointerDetectionService) {
       var robot = robot,
           collisionListeners = [],
           accelerometerWatchID = null,
           collisionDetectionSuspended = false,
-          collisionDelayInMs = 1000;
+          collisionDelayInMs = 1000,
+          pointerDetector = _initializePointerDetection();
 
       var robotEngine = {
           drive: robot.drive,
@@ -26,7 +27,12 @@
           clearWatchTravelData: clearWatchTravelData,
           watchCollision: watchCollision,
           clearWatchCollision: clearWatchCollision,
-          getCompassHeading: _getCompassHeading
+          getCompassHeading: getCompassHeading,
+          startPointerDetection: startPointerDetection,
+          stopPointerDetection: stopPointerDetection,
+          calibratePointerDetection : pointerDetector.calibrate,
+          addPointerDetectionWindows : pointerDetector.addWindows,
+          getPointerDetectionVideoInput : getPointerDetectionVideoInput
       };
       return robotEngine;
 
@@ -64,6 +70,35 @@
         if (collisionListeners.length === 0) {
             _stopWatchAcceleration();
         }
+      }
+
+      function startPointerDetection(options) {
+        var defaults = {
+              videoWidth: 640,
+              videoFrameRate: 15,
+              videoInput: null,
+              videoOutput: null,
+              sendVideoOnly: false
+            };
+        options = angular.extend({}, defaults, options);
+        options.videoInput = options.videoInput || document.createElement('video');
+        options.videoOutput = options.videoOutput || document.createElement('video');
+
+        var deferred = $q.defer();
+
+        pointerDetector.start(options)
+        .then(function() {
+          deferred.resolve(pointerDetector.input || { videoWidth: 0, videoHeight: 0});
+        });
+        return deferred.promise;
+      }
+
+      function stopPointerDetection() {
+        pointerDetector.stop();
+      }
+
+      function getPointerDetectionVideoInput() {
+        return pointerDetector.input || { videoWidth: 0, videoHeight: 0};
       }
 
       function _removeListener(listeners, id) {
@@ -132,10 +167,10 @@
 
       }
 
-      function _getCompassHeading(compassSuccess, compassError) {
+      function getCompassHeading(compassSuccess, compassError) {
         var deferred;
         if (compassSuccess === undefined) {
-          console.log('_getCompassHeading => use Promises.');
+          console.log('getCompassHeading => use Promises.');
           deferred = $q.defer();
           compassSuccess = function(heading) {
             deferred.resolve(heading);
@@ -160,6 +195,17 @@
           var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
           return v.toString(16);
         });
+      }
+
+      function _initializePointerDetection() {
+        var kurentoSettings = {
+          connectionSettings: {
+            ws_uri : 'ws://kurento.lab.fiware.org:8888/kurento',
+            //ws_uri: 'ws://195.225.105.124:8888/kurento',
+            ice_servers: undefined
+          }
+        };
+        return pointerDetectionService.init(kurentoSettings);
       }
     };
 

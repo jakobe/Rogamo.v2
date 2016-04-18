@@ -29,7 +29,7 @@
     <script src="app/templates.js"></script>
 
     <!-- filter js -->
-    <script src="lib/angular/Angular.Filter.Format.js"></script>
+    <script src="lib/angular.filter.format/Angular.Filter.Format.js"></script>
 
     <!-- services -->
     <script src="app/services/canvas-renderer.service.js"></script>
@@ -37,6 +37,7 @@
     <script src="app/services/audio/audio.cordova.js"></script>
     <script src="app/services/audio/html5audio.js"></script>
     <script src="app/services/robot/robot.engine.js"></script>
+    <script src="app/services/fiware/pointerdetection.service.js"></script>
 
     <!-- controllers -->
     <script src="app/dashboard/dashboard.controller.js"></script>
@@ -45,11 +46,23 @@
     <script src="app/games/pong.controller.js"></script>
     <script src="app/accelerometer/accelerometer.controller.js"></script>
     <script src="app/robot-controls/robot-controls.controller.js"></script>
+    <script src="app/kurento/kurento.controller.js"></script>
+    <script src="app/kurento/kurento-pointer.controller.js"></script>
 
     <!-- games -->
     <script src="app/services/games/egg-throw.game.js"></script>
     <script src="app/services/games/swing.game.js"></script>
     <script src="app/services/games/pong.game.js"></script>
+
+    <!-- kurento -->
+    <link rel="stylesheet" href="css/kurento.css">
+    <script src="lib/adapter-latest.js"></script>
+    <!-- <script src="lib/adapter.js/adapter.js"></script> -->
+
+    <!-- <script src="js/ios-websocket-hack.js"></script> -->
+    <script src="lib/kurento-client/js/kurento-client.js"></script>
+    <script src="lib/kurento-module-pointerdetector/js/kurento-module-pointerdetector.js"></script>
+    <script src="lib/kurento-utils/js/kurento-utils.js"></script>
 </head>
 <body ng-app="app">
     <!--
