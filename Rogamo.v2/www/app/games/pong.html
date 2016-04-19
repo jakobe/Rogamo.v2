@@ -54,6 +54,30 @@
             <ion-toggle ng-model="vm.enableFIWare">
               FIWare
             </ion-toggle>
+            <label class="item item-input item-select">
+              <div class="input-label">
+                Video opløsning
+              </div>
+              <select ng-model="vm.videoWidth">
+                <option value="320">Mindst (320 x 240)</option>
+                <option value="640">Normal (640 x 480)</option>
+                <option value="960">Større (960 x 720)</option>
+                <option value="1280">Størst (1280 x 960)</option>
+              </select>
+            </label>
+            <label class="item item-input item-select">
+              <div class="input-label">
+                Video frame rate
+              </div>
+              <select ng-model="vm.videoFrameRate">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+              </select>
+            </label>
             <ion-toggle ng-model="vm.debug">
               Debug
             </ion-toggle>

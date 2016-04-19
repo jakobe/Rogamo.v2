@@ -8,15 +8,7 @@
 
     function PongGameController($scope, $timeout, $ionicPlatform, $ionicPopover, game, robot) {
       var vm = this,
-          gameStartPromise,
-          videoWidth = vm.videoWidth = 640,
-          videoHeight = videoWidth;
-
-      if (window.orientation === 0) {
-        videoWidth = Math.round(videoWidth * 0.75);
-      } else {
-        videoHeight = Math.round(videoHeight * 0.75);
-      }
+          gameStartPromise;
 
       vm.secondsToGameStart = -1;
 
@@ -60,6 +52,8 @@
         min: 1,
         max: 10
       };
+      vm.videoWidth = "640";
+      vm.videoFrameRate = "15";
       vm.inputVideo = {
         videoWidth: 0,
         videoHeight: 0
@@ -91,6 +85,15 @@
       });
 
       function initPopover() {
+        var videoWidth = parseInt(vm.videoWidth),
+            videoHeight = videoWidth;
+
+        if (window.orientation === 0) {
+          videoWidth = Math.round(videoWidth * 0.75);
+        } else {
+          videoHeight = Math.round(videoHeight * 0.75);
+        }
+
         var popoverHeight = videoHeight + 100;
 
         var popoverTemplate = '<ion-popover-view style="height: ' + popoverHeight + 'px; width: 98%;">'+
@@ -130,7 +133,7 @@
 
         var options = {
           videoWidth: parseInt(vm.videoWidth),
-          videoFrameRate: 15,//parseInt(vm.videoFrameRate),
+          videoFrameRate: parseInt(vm.videoFrameRate),
           videoInput: videoInput,
           videoOutput: videoOutput,
           sendVideoOnly: true//vm.sendVideoOnly
