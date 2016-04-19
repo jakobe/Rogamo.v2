@@ -162,7 +162,7 @@
             robot.drive(direction, turn, range,
                 function (traveldata) {
                     if (range > 0) {
-                      alert('Drive Range end! Range: ' + traveldata.range);
+                      console.log('Drive Range end! Range: ' + traveldata.range);
                     }
                 },
                 function (msg) { alert("Error! => " + msg); }
