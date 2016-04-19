@@ -11,6 +11,7 @@
   <access origin="*"/>
   <vs:features></vs:features>
   <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="DisallowOverscroll" value="True"/>
   <preference name="windows-target-version" value="8.1"/>
   <preference name="windows-phone-target-version" value="8.1"/>
   <preference name="Orientation" value="default"/>
