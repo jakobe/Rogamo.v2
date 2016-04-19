@@ -4,11 +4,12 @@
     angular.module('app')
     .controller('PongGameController', PongGameController);
 
-    PongGameController.$inject = ['$scope', '$timeout', '$ionicPlatform', '$ionicPopover', 'PongGame', 'RobotEngine'];
+    PongGameController.$inject = ['$scope', '$timeout', '$ionicPlatform', '$ionicPopover', 'PongGame', 'RobotEngine', 'RobotStatus', 'OrionService'];
 
-    function PongGameController($scope, $timeout, $ionicPlatform, $ionicPopover, game, robot) {
+    function PongGameController($scope, $timeout, $ionicPlatform, $ionicPopover, game, robot, robotStatus, orionService) {
       var vm = this,
-          gameStartPromise;
+          gameStartPromise,
+          startDate;
 
       vm.secondsToGameStart = -1;
 
@@ -148,6 +149,7 @@
       }
 
       function startGame($event) {
+        startDate = new Date();
         vm.containerStyle['background-color'] = 'rgb(185, 175, 255)';
         var gameSettings = _getGameSettings();
         game.init(gameSettings, _showImage, _startDrive, _gameOver, _robotPush);
@@ -217,6 +219,11 @@
         game.stop();
         vm.successImage = '#';
         vm.gameStarted = false;
+        if (startDate instanceof Date) {
+          var endDate = new Date();
+          var winner = vm.winner;
+          _logGameStats(game.id, startDate, endDate, winner);
+        }
         delete vm.winner;
       }
 
@@ -248,6 +255,35 @@
       function calibrate() {
         robot.calibratePointerDetection();
         vm.isCalibrated = true;
+      }
+
+      function _logGameStats(gameId, startDate, endDate, winner) {
+        var durationInMs = endDate - startDate;
+        var durationToTime = msToTime(durationInMs);
+        var duration = Number((durationToTime.minutes + (durationToTime.seconds / 60.0)).toFixed(1));
+        robotStatus.getSerial().then(function(robotSerial) {
+          orionService.uploadGameData(robotSerial, gameId, startDate, duration);
+        })
+      }
+
+      function msToTime(duration) {
+          var milliseconds = parseInt((duration % 1000)),
+              seconds = parseInt((duration / 1000) % 60),
+              minutes = parseInt((duration / (1000 * 60)) % 60),
+              hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+          var hoursString = (hours < 10) ? "0" + hours : hours;
+          var minutesString = (minutes < 10) ? "0" + minutes : minutes;
+          var secondsString = (seconds < 10) ? "0" + seconds : seconds;
+          var millisecondsString = (milliseconds < 100) ? "0" + milliseconds : milliseconds;
+
+          return {
+            time: hoursString + ":" + minutesString + ":" + secondsString + "." + millisecondsString,
+            hours : hours,
+            minutes : minutes,
+            seconds : seconds,
+            milliseconds : milliseconds
+          };
       }
 
     }

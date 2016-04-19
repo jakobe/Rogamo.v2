@@ -23,6 +23,8 @@
           poleUp: robot.poleUp,
           retractKickstands: robot.retractKickstands,
           deployKickstands: robot.deployKickstands,
+          watchBatteryStatus: watchBatteryStatus,
+          clearWatchBatteryStatus: clearWatchBatteryStatus,
           watchTravelData: watchTravelData,
           clearWatchTravelData: clearWatchTravelData,
           watchCollision: watchCollision,
@@ -35,6 +37,14 @@
           getPointerDetectionVideoInput : getPointerDetectionVideoInput
       };
       return robotEngine;
+
+      function watchBatteryStatus(listener) {
+        robot.watchBatteryStatus(listener);
+      }
+
+      function clearWatchBatteryStatus(listener) {
+        robot.clearWatchBatteryStatus(listener);
+      }
 
       function watchTravelData(listener) {
         robot.watchTravelData(listener);

@@ -94,6 +94,7 @@
       // }, 1000);
 
       var game = {
+          id: "Pong",
           init: init,
           play: play,
           stop: stop

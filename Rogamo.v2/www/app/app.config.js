@@ -117,6 +117,12 @@
         var deferred = $q.defer();
         $ionicPlatform.ready(function () {
             $log.debug('ionic.Platform.ready');
+            if (window.device.platform === 'iOS') {
+              cordova.plugins.iosrtc.registerGlobals();
+            }
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia === undefined) {
+              alert('No support for navigator.mediaDevices.getUserMedia!');
+            }
             deferred.resolve();
         });
         return deferred.promise;
