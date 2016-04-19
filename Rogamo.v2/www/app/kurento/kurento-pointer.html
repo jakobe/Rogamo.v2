@@ -18,6 +18,10 @@
                     <button class="button button-assertive icon-left ion-stop" ng-click="vm.stop()" ng-disabled="!vm.started">Stop</button>
                     <button class="button button-positive icon-left ion-social-apple" ng-click="vm.calibrate()" ng-disabled="!vm.started || vm.paused">Calibrate</button>
                     <button class="button button-royal icon-left ion-model-s" ng-click="vm.drive()">Drive</button>
+                    <div>
+                      <label ng-bind="vm.inputDimensions" class="video-dimensions"></label>
+                      <label ng-bind="vm.outputDimensions" class="video-dimensions"></label>
+                    </div>
                   </div>
                   <div class="col">
                     <div>
@@ -41,12 +45,6 @@
                     <div>
                       Send video only: <input type="checkbox" ng-model="vm.sendVideoOnly" />
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label ng-bind="vm.inputDimensions"></label>
-                    <label ng-bind="vm.outputDimensions"></label>
                 </div>
             </div>
         </div>
