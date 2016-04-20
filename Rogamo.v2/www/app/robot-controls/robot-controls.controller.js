@@ -152,7 +152,7 @@
         $scope.poleUp = robot.poleUp;
 
         $scope.turnByDegrees = function (degrees) {
-            robot.turnByDegrees(degrees)//, function (data) { alert("Succes! => " + data.message); }, function (data) { alert("Error! => " + data.message); });
+            robot.turnByDegrees(degrees, null, function (msg) { alert("Error! => " + msg); });
         }
 
         $scope.drive = function (direction, turn, range) {
