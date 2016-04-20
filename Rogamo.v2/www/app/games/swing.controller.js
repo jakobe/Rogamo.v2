@@ -3,12 +3,12 @@
 
     angular.module('app')
     .controller('SwingGameController', SwingGameController);
-    
-    SwingGameController.$inject = ['$scope', '$ionicPlatform', 'CanvasRendererService', 'SwingGame'];
 
-    function SwingGameController($scope, $ionicPlatform, CanvasRendererService, SwingGame) {
+    SwingGameController.$inject = ['$scope', '$ionicPlatform', 'CanvasRendererService', 'SwingGame', 'GameEngine'];
 
-        var vm = this;
+    function SwingGameController($scope, $ionicPlatform, CanvasRendererService, game, gameEngine) {
+        var vm = this,
+            startDate;
 
         $scope.doubleRobotics = {
             serial: "00-000000",
@@ -35,38 +35,32 @@
 
         $scope.model = model;
 
-        var games = {
-            eggThrow: "eggThrow",
-            swing: "swing"
+        $scope.startGame = function () {
+          startDate = new Date();
+          console.log('starting game "' + game.id + '"...');
+          game.init($scope.model, onRobotDriveSucces, onRobotDriveFailure, onGameOver, onRobotPush);
+          CanvasRendererService.clearCanvas(canvas);
+          //setTimeout(function () { CanvasRendererService.drawSmiley(canvas, 'white') }, 1500);
+          $scope.model.gameLost = false;
+          var gameContainer = document.getElementById('gameContainer');
+          gameContainer.style.backgroundColor = "rgb(255, 255, 255)";
+          gameContainer.setAttribute("data-background-color-init", gameContainer.style.backgroundColor);
+          game.play();
+          model.gameStarted = true;
         };
 
-        $scope.games = games;
-
-        var currentGame = null;
-        $scope.startGame = function (game) {
-            if (game === games.swing) {
-                currentGame = SwingGame;
-            }
-            if (currentGame != null) {
-                console.log('starting game "' + game + '"...');
-                currentGame.init($scope.model, onRobotDriveSucces, onRobotDriveFailure, onGameOver, onRobotPush);
-                $scope.stopGame = currentGame.stop;
-                CanvasRendererService.clearCanvas(canvas);
-                //setTimeout(function () { CanvasRendererService.drawSmiley(canvas, 'white') }, 1500);
-                $scope.model.gameLost = false;
-                var gameContainer = document.getElementById('gameContainer');
-                gameContainer.style.backgroundColor = "rgb(255, 255, 255)";
-                gameContainer.setAttribute("data-background-color-init", gameContainer.style.backgroundColor);
-                currentGame.play();
-                model.gameStarted = true;
-            }
-        };
+        $scope.stopGame = function() {
+          game.stop();
+          if (startDate instanceof Date) {
+            var endDate = new Date();
+            var winner = null;
+            gameEngine.logGameStats(game.id, startDate, endDate, winner);
+          }
+        }
 
         $scope.push = function (force) {
             $scope.force = force;
-            if (currentGame) {
-                currentGame.pushSwing(force);
-            }
+            game.pushSwing(force);
         }
 
         function onRobotDriveSucces(traveldata) {
@@ -81,7 +75,7 @@
 
         function onRobotPush(data) {
             $scope.$apply(function () {
-                
+
             });
         }
 
@@ -96,7 +90,7 @@
                 var gameContainer = document.getElementById('gameContainer');
                 gameContainer.setAttribute("data-background-color-init", gameContainer.style.backgroundColor);
                 gameContainer.style.backgroundColor = "red";
-                //alert('Øv, du har smadret ægget :(');
+                //alert('Ã˜v, du har smadret Ã¦gget :(');
             }
         }
 

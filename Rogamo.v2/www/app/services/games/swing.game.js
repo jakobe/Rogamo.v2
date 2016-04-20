@@ -64,6 +64,7 @@
         }
 
         var game = {
+            id: 'SwingGame',
             init: init,
             play: play,
             stop: stop,
@@ -257,7 +258,7 @@
                 robotDriveTimeoutId = null;
             }
             robot.stop();
-            robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
+            //robot.stopTravelData();//function (msg) { alert("succes! => " + msg); }, function (msg) { alert("Error! => " + msg); });
             model.robotDriving = false;
         }
 

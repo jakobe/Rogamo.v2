@@ -30,6 +30,7 @@
         preloadSounds();
 
         var game = {
+            id: "EggThrow",
             init: init,
             play: play,
             stop: stop
