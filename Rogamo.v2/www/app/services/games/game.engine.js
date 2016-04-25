@@ -4,9 +4,9 @@
   angular.module('app.core')
   .factory('GameEngine', GameEngine);
 
-  GameEngine.$inject = ['RobotStatus', 'OrionService'];
+  GameEngine.$inject = ['RobotStatus', 'OrionService', '$q'];
 
-  function GameEngine(robotStatus, orionService) {
+  function GameEngine(robotStatus, orionService, $q) {
     var gameEngine = {
       logGameStats: logGameStats
     };
@@ -17,13 +17,21 @@
       var durationInMs = endDate - startDate;
       var durationToTime = _msToTime(durationInMs);
       var duration = Number((durationToTime.minutes + (durationToTime.seconds / 60.0)).toFixed(1));
-      robotStatus.getSerial().then(function(robotSerial) {
-        if (robotSerial) {
-          orionService.uploadGameData(robotSerial, gameId, startDate, duration);
+      var promises = {
+        robotSerial: robotStatus.getSerial(),
+        position: robotStatus.getGeolocation()
+      }
+      $q.all(promises).then(function(values) {
+        if (values.robotSerial) {
+          if (values.position) {
+            orionService.uploadGameData(values.robotSerial, values.position, gameId, startDate, duration);
+          } else {
+            alert('Kunne ikke få GPS position.\nCheck at GPS/lokationstjenester er slået til.');
+          }
         } else {
           alert('Robot er ikke forbundet til iPad\'en.\nCheck at bluetooth er slået til og robotten er tændt.');
         }
-      })
+      });
     }
 
     function _msToTime(duration) {

@@ -26,8 +26,12 @@
       return $http.post(url, data, { timeout: 5000 });
     }
 
-    function uploadRobotData(robotSerial, dataToUpload) {
+    function uploadRobotData(robotSerial, position, dataToUpload) {
       var entityType = "robot";
+      dataToUpload.geolocation = [
+        position.coords.latitude,
+        position.coords.longitude
+      ];
       var query = _getOrionUpdateQuery(entityType, robotSerial, dataToUpload);
       if (isNewRobot === null) {
         _checkIfRobotExistsInOrionContextBroker(robotSerial).then(function successCallback(isNew) {
@@ -44,7 +48,7 @@
       }
     }
 
-    function uploadGameData(robotSerial, gameId, startDate, duration) {
+    function uploadGameData(robotSerial, position, gameId, startDate, duration) {
       var entityType = "game";
       var UID = "UID" + startDate.getTime();
       var dataToUpload = {
@@ -52,7 +56,10 @@
         robotID: robotSerial,
         timeStamp: startDate.toJSON(),
         duration: duration,
-        geolocation: ["56.16293900","10.20392100"]
+        geolocation: [
+          position.coords.latitude,
+          position.coords.longitude
+        ]
       }
       var isNew = true;
       var query = _getOrionUpdateQuery(entityType, UID, dataToUpload, isNew);

@@ -8,12 +8,14 @@
 
   function RobotStatus(robot, orionService, $timeout, $q) {
     var initialized = false,
-        deferred = $q.defer(),
+        deferredSerial = $q.defer(),
+        deferredGeolocation = $q.defer(),
         newTravelData = null,
         travelDataUploadIntervalInMs = 250,
         getBatteryStatusTimeoutInMs = 10000,
         robotStatus = {
-          getSerial: getSerial
+          getSerial: getSerial,
+          getGeolocation: getGeolocation
         };
 
     _init();
@@ -23,20 +25,20 @@
     function _init() {
       var timeoutPromise = $timeout(function() {
         robot.clearWatchBatteryStatus(onBatteryStatus);
-        deferred.reject("Get robot serial timed out.");
+        deferredSerial.reject("Get robot serial timed out.");
+        console.log("Get robot serial timed out.");
       }, getBatteryStatusTimeoutInMs);
 
       function onBatteryStatus(status) {
         if (!initialized) {
           initialized = true;
           $timeout.cancel(timeoutPromise);
-          deferred.resolve(status.serial);
+          deferredSerial.resolve(status.serial);
           if (status.serial) {
             robot.watchTravelData(_onTraveldata);
             setInterval(function() {
               _uploadTravelData(status.serial);
             }, travelDataUploadIntervalInMs);
-
           } else {
             alert('Robot er ikke forbundet til iPad\'en.\nCheck at bluetooth er slået til og robotten er tændt.');
           }
@@ -44,10 +46,31 @@
         _uploadStatus(status);
       }
       robot.watchBatteryStatus(onBatteryStatus);
+      var geolocationOptions = {
+        enableHighAccuracy: false,
+        timeout: 5 * 1000, //5 seconds
+        maximumAge: 10 * 60 * 1000 //10 minutes
+      };
+      navigator.geolocation.getCurrentPosition(_onGeolocationSuccess, _onGeolocationError, geolocationOptions)
     }
 
     function getSerial() {
-      return deferred.promise;
+      return deferredSerial.promise;
+    }
+
+    function getGeolocation() {
+      return deferredGeolocation.promise;
+    }
+
+    function _onGeolocationSuccess(position) {
+      console.log("Got geolocation...");
+      deferredGeolocation.resolve(position);
+    }
+
+    function _onGeolocationError(error) {
+      console.log("Geolocation error...");
+      console.warn('ERROR(' + error.code + '): ' + error.message);
+      deferredGeolocation.reject(error);
     }
 
     function _onTraveldata(traveldata) {
@@ -60,8 +83,10 @@
           speed: Math.abs(Math.round(newTravelData.speed))
         };
         //console.log(dataToUpload);
-        // console.log("Upload traveldata...");
-        orionService.uploadRobotData(robotSerial, dataToUpload);
+        getGeolocation().then(function (position) {
+          // console.log("Upload traveldata...");
+          orionService.uploadRobotData(robotSerial, position, dataToUpload);
+        });
         newTravelData = null;
       }
     }
@@ -79,11 +104,13 @@
       var dataToUpload = {
         battery: Math.round(status.batteryPercent * 100),
         speed: 0,
-        firmwareversion: parseInt(status.firmwareVersion),
-        geolocation: ["56.16293900", "10.20392100"]
+        firmwareversion: parseInt(status.firmwareVersion)
       };
-      // console.log("Upload new state...");
-      orionService.uploadRobotData(status.serial, dataToUpload);
+      console.log("Upload new state...");
+      getGeolocation().then(function (position) {
+        console.log("Got geolocation - now upload...");
+        orionService.uploadRobotData(status.serial, position, dataToUpload);
+      });
     }
 
   }
