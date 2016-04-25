@@ -33,6 +33,7 @@
     "cordova-plugin-wkwebview-engine",
     "cordova-plugin-device-orientation",
     "cordova-plugin-iosrtc",
+    "cordova-plugin-geolocation"
   ],
   "cordovaPlatforms": [
     {

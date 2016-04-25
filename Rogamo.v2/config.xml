@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget defaultlocale="en-US" id="io.cordova.myappe2785d518e9f4f6ea03055878dd7a400" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">
-  <name>Rogamo.v3</name>
+  <name>Rogamo</name>
   <description>
       A Rogamo Ionic Framework and Cordova project.
   </description>
@@ -66,6 +66,7 @@
   <plugin name="cordova-plugin-device-orientation" spec="~1.0.2"/>
   <plugin name="cordova-plugin-iosrtc" spec="~2.2.4"/>
   <plugin name="cordova-plugin-splashscreen" spec="~3.1.0"/>
+  <plugin name="cordova-plugin-geolocation" spec="~2.1.0"/>
   <engine name="browser" spec="~4.0.0"/>
   <engine name="ios" spec="~4.1.0"/>
   <icon src="resources/ios/icon/icon-small@3x.png"/>
